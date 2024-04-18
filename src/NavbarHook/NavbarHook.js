@@ -68,7 +68,7 @@ const NavbarHook = () => {
         </li>
         <li>
           <NavLink
-            to="/get-started"
+            to="/signup"
             className={`${linkClassName} ${buttonClassName}`}
             onClick={closeMobileMenu}
           >
@@ -83,7 +83,7 @@ const NavbarHook = () => {
     <header className="header">
       <nav className="nav container">
         <NavLink to="/" className="nav__logo">
-          Navigation Bar
+          Bhuban Padun  
         </NavLink>
 
         {isMobile && (
