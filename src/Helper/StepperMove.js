@@ -40,86 +40,72 @@ class StepperMove extends React.Component {
 
     render() {
         return (
-            <Container component={Paper}
-                sx={{
-                    padding: "8px",
-                    display: "flex",
-                    flexDirection: 'column',
-                    gap: "8px",
-                    backgroundImage: `url(${pic_1})`,
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}
-            >
-                <Grid component={Paper} sx={12} md={6}>
-                    <Stepper activeStep={this.state.activeStep} orientation='vertical' >
-                        {
-                            Array.isArray(this.props.stepsList) && this.props.stepsList.map((step, index) => (
-                                <Step key={step.label}>
-                                    <StepLabel
-                                        icon={<step.label_icon/>}
-                                        sx={{
-                                            '.MuiStepLabel-label': {
-                                                color: "white",
-                                                fontFamily: "Lato",
-                                                fontSize: "18px",
-                                                fontWeight: 400,
-                                                fontStyle: 'normal',
-                                                letterSpacing: 2
-                                            },
-                                            '.Mui-active': {
-                                                color: 'green'
-                                            },
-                                            '.Mui-completed': {
-                                                color: "red"
-                                            }
-                                        }}
-                                    >
-                                        {
-                                            step.label
-                                        }
-                                    </StepLabel>
-                                    <StepContent>
-                                        {
-                                            <step.description />
-                                        }
-                                        <Box sx={{ mb: 2 }}>
-                                            <div>
-                                                <Button
-                                                    variant="contained"
-                                                    sx={{ mt: 1, mr: 1 }}
-                                                    onClick={this.handleNext}
-                                                >
-                                                    {index === this.state.steps.length ? "Finish" : "Continue"}
-                                                </Button>
-                                                <Button
-                                                    disabled={index === 0}
-                                                    onClick={this.handleBack}
-                                                    sx={{ mt: 1, mr: 1 }}
-                                                >
-                                                    Back
-                                                </Button>
-                                            </div>
-                                        </Box>
-                                    </StepContent>
-                                </Step>
-                            ))
-                        }
-                    </Stepper>
+            <Grid component={Paper} sx={12} md={6} display={'flex'} flexDirection={'column'} gap={"8px"} justifyContent={'center'} bgcolor={"#c9c253"} alignItems={"center"}>
+                <Stepper activeStep={this.state.activeStep} orientation='vertical' >
                     {
-                        this.state.activeStep === this.state.steps.length && (
-                            <Paper square elevation={0} sx={{ p: 3, width: 'max-content' }}>
-                                <Typography>All steps completed - you&apos;re finished</Typography>
-                                <Button sx={{ mt: 1, mr: 1 }} variant='contained'>
-                                    Submit
-                                </Button>
-                            </Paper>
-                        )
+                        Array.isArray(this.props.stepsList) && this.props.stepsList.map((step, index) => (
+                            <Step key={step.label}>
+                                <StepLabel
+                                    icon={<step.label_icon />}
+                                    sx={{
+                                        '.MuiStepLabel-label': {
+                                            color: "white",
+                                            fontFamily: "Lato",
+                                            fontSize: "18px",
+                                            fontWeight: 400,
+                                            fontStyle: 'normal',
+                                            letterSpacing: 2
+                                        },
+                                        '.Mui-active': {
+                                            color: 'green'
+                                        },
+                                        '.Mui-completed': {
+                                            color: "red"
+                                        }
+                                    }}
+                                >
+                                    {
+                                        step.label
+                                    }
+                                </StepLabel>
+                                <StepContent>
+                                    {
+                                        <step.description />
+                                    }
+                                    <Box sx={{ mb: 2 }}>
+                                        <div>
+                                            <Button
+                                                variant="contained"
+                                                sx={{ mt: 1, mr: 1 }}
+                                                onClick={this.handleNext}
+                                            >
+                                                {index === this.state.steps.length ? "Finish" : "Continue"}
+                                            </Button>
+                                            <Button
+                                                disabled={index === 0}
+                                                onClick={this.handleBack}
+                                                sx={{ mt: 1, mr: 1 }}
+                                            >
+                                                Back
+                                            </Button>
+                                        </div>
+                                    </Box>
+                                </StepContent>
+                            </Step>
+                        ))
                     }
-                </Grid>
-            </Container>
+                </Stepper>
+                {
+                    this.state.activeStep === this.state.steps.length && (
+                        <Paper square elevation={0} sx={{ p: 3, width: 'max-content' ,borderRadius:"12px"}}>
+                            <Typography>All steps completed - you&apos;re finished</Typography>
+                            <Button sx={{ mt: 1, mr: 1 }} variant='contained'>
+                                Submit
+                            </Button>
+                        </Paper>
+                    )
+                }
+            </Grid>
         )
     }
 }

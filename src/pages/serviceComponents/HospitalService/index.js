@@ -41,7 +41,9 @@ class About extends React.Component {
                     padding: "0px",
                     display: "flex",
                     flexDirection: 'column',
-                    gap: "10px"
+                    gap: "10px",
+                    paddingTop:4,
+                    paddingBottom:4
                 }}
             >
                 <Grid item sx={12} md={6}>
@@ -93,7 +95,9 @@ class ServiceTime extends React.Component {
                     padding: "0px",
                     display: "flex",
                     flexDirection: 'column',
-                    gap: "20px"
+                    gap: "20px",
+                    paddingTop:4,
+                    paddingBottom:4
                 }}
             >
                 <Typography sx={{
@@ -189,7 +193,9 @@ class AboutVechicle extends React.Component {
                     padding: "0px",
                     display: "flex",
                     flexDirection: 'column',
-                    gap: "20px"
+                    gap: "20px",
+                    paddingTop:4,
+                    paddingBottom:4
                 }}
             >
                 <Grid item sx={12} md={6}>
@@ -247,7 +253,9 @@ class VechileCapacity extends React.Component {
                     padding: "0px",
                     display: "flex",
                     flexDirection: 'column',
-                    gap: "20px"
+                    gap: "20px",
+                    paddingTop:4,
+                    paddingBottom:4
                 }}
             >
                 <Grid item sx={12} md={6}>
@@ -263,6 +271,65 @@ class VechileCapacity extends React.Component {
                        focused
                        placeholder="Maximum Capacity"
                     />
+                </Grid>
+            </Container>
+        )
+    }
+}
+
+class ChargesType extends React.Component{
+    constructor(props){
+        super(props);
+        this.state= {
+            chargesTypes:"",
+            chargeMethod:""
+        }
+    }
+
+    render(){
+        return(
+            <Container component={Paper} style={{
+                display:"flex",
+                flexDirection:"column",
+                gap:"10px",
+                paddingTop:4,
+                paddingBottom:4
+            }}>
+                <Grid item sx={12} md={6} >
+                    <FormControl>
+                        <InputLabel>Select Type</InputLabel>
+                        <Select
+                          variant='outlined'
+                          label="Select Type"
+                          value={this.state.chargesTypes}
+                          onChange={(e)=> {this.setState({chargesTypes: e.target.value})}}
+                          sx={{width:"240px"}}
+                        >
+                            {
+                                ["After","Before","Any Time"].map((item,index) => (
+                                    <MenuItem key={index} value={item} >{item}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item sx={12} md={6}>
+                    <FormControl>
+                        <InputLabel>Charge By</InputLabel>
+                        <Select
+                          variant='outlined'
+                          label="Charge By"
+                          value={this.state.chargeMethod}
+                          onChange={(e)=> {this.setState({chargeMethod: e.target.value})}}
+                          sx={{width:"240px"}}
+                        >
+                            {
+                                ["By Per Tripe","By Per KM","By Per Member","Other"].map((item,index)=> (
+                                    <MenuItem key={index} value={item}>{item}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
                 </Grid>
             </Container>
         )
@@ -296,23 +363,23 @@ const steps = [
         description: VechileCapacity
     },
     {
-        label: "Type Of charge",
+        label: "Type Of charges",
         label_icon: EvStation,
         value: "name",
-        description: About
+        description: ChargesType
     },
-    {
-        label: "Charge Amount",
-        label_icon: Payment,
-        value: "name",
-        description: About
-    },
-    {
-        label: "Agreement",
-        label_icon: Handshake,
-        value: "name",
-        description: About
-    }
+    // {
+    //     label: "Charge Amount",
+    //     label_icon: Payment,
+    //     value: "name",
+    //     description: About
+    // },
+    // {
+    //     label: "Agreement",
+    //     label_icon: Handshake,
+    //     value: "name",
+    //     description: About
+    // }
 ]
 
 class HospitalService extends React.Component {
@@ -325,7 +392,11 @@ class HospitalService extends React.Component {
 
     render() {
         return (
-            <Container component={Paper}>
+            <Container component={Paper} sx={{
+                background:'#54544d',
+                padding:4,
+                borderRadius:"8px"
+            }}>
                 <StepperMove
                     stepsList={steps}
                 />
