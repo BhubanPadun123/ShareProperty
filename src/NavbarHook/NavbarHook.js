@@ -59,11 +59,11 @@ const NavbarHook = () => {
         </li>
         <li>
           <NavLink
-            to="/location"
+            to="/post"
             className={linkClassName}
             onClick={closeMobileMenu}
           >
-            Location
+            POST
           </NavLink>
         </li>
         <li>

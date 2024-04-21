@@ -8,11 +8,13 @@ import News from "./pages/News";
 import SignupForm from "./pages/Signup";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login"
+import PostPropert from "./pages/PostProperty";
+import JunctionPoint from "./pages/JunctionPoint";
+import ErrorPage from "./pages/ErrorPage";
 
 const App = () => {
   return (
     <Router>
-      {/* <Navbar /> */}
       <NavbarHook />
       <main className="main-content">
         <Routes>
@@ -21,6 +23,9 @@ const App = () => {
           <Route path="/news" element={<News />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/room-service" element={<PostPropert />} />
+          <Route path="/post" element={<JunctionPoint />} />
+          <Route path="*" element={<ErrorPage/>} />
         </Routes>
       </main>
     </Router>
