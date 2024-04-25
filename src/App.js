@@ -11,11 +11,13 @@ import Login from "./pages/Login"
 import PostPropert from "./pages/PostProperty";
 import JunctionPoint from "./pages/JunctionPoint";
 import ErrorPage from "./pages/ErrorPage";
+import GlobalNotification from "./Helper/GlobalNotification";
 
 const App = () => {
   return (
     <Router>
       <NavbarHook />
+      <GlobalNotification />
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />

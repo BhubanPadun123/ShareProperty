@@ -13,6 +13,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {LoginSharp} from "@mui/icons-material"
 import { PasswordResetAlert } from '../Helper/AlertModel';
+import { useSelector, useDispatch} from 'react-redux';
+import { UserLoginAction } from '../Redux/actions/UserAction';
 
 function Copyright(props) {
     return (
@@ -32,6 +34,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Login() {
+    const dispatch = useDispatch()
 
     const [state,setState] = React.useState({
         resetPassword: false
@@ -39,10 +42,11 @@ export default function Login() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        let userData = {
             email: data.get('email'),
             password: data.get('password'),
-        });
+        };
+        dispatch(UserLoginAction(userData))
     };
 
     return (
