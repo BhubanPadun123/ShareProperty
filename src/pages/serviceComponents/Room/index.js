@@ -28,26 +28,25 @@ class CandidateAbout extends React.Component {
         super(props);
         this.state = {
             candidateDetails: {
-                firstName: "",
-                lastName: "",
-                email: "",
-                state: "",
-                pinCode: "",
-                district: "",
-                town: "",
-                landmark: "",
-                village: ""
+                Name: this.props.metaData.hasOwnProperty("candidateName") ? this.props.metaData.candidateName : "",
+                email: this.props.metaData.hasOwnProperty("candidateDetails") ? this.props.metaData.candidateDetails.email : "",
+                state: this.props.metaData.hasOwnProperty("candidateDetails") ? this.props.metaData.candidateDetails.state : "",
+                pinCode: this.props.metaData.hasOwnProperty("candidateDetails") ? this.props.metaData.candidateDetails.pinCode : "",
+                district: this.props.metaData.hasOwnProperty("candidateDetails") ? this.props.metaData.candidateDetails.district : "",
+                town: this.props.metaData.hasOwnProperty("candidateDetails") ? this.props.metaData.candidateDetails.town : "",
+                landmark: this.props.metaData.hasOwnProperty("candidateDetails") ? this.props.metaData.candidateDetails.landmark : "",
+                village: this.props.metaData.hasOwnProperty("candidateDetails") ? this.props.metaData.candidateDetails.village : ""
             },
         }
     }
 
     onChangeText = (e, type) => {
         switch (type) {
-            case "firstName":
-                this.setState((prevState) => ({ candidateDetails: { ...prevState.candidateDetails, firstName: e } }), () => this.props.handleCandidateDataChange(this.state.candidateDetails, "candidateDetails"))
+            case "Name":
+                this.setState((prevState) => ({ candidateDetails: { ...prevState.candidateDetails, Name: e } }), () => this.props.handleCandidateDataChange(this.state.candidateDetails, "candidateDetails"))
                 break;
-            case "lastName":
-                this.setState((prevState) => ({ candidateDetails: { ...prevState.candidateDetails, lastName: e } }), () => this.props.handleCandidateDataChange(this.state.candidateDetails, "candidateDetails"))
+            case "state":
+                this.setState((prevState) => ({ candidateDetails: { ...prevState.candidateDetails, state: e } }), () => this.props.handleCandidateDataChange(this.state.candidateDetails, "candidateDetails"))
                 break;
             case "email":
                 this.setState((prevState) => ({ candidateDetails: { ...prevState.candidateDetails, email: e } }), () => this.props.handleCandidateDataChange(this.state.candidateDetails, "candidateDetails"))
@@ -93,64 +92,57 @@ class CandidateAbout extends React.Component {
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="First Name"
-                            value={this.state.candidateDetails.firstName}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"firstName")}}
-                        />
-                    </Grid>
-                    <Grid item sx={12} md={6}>
-                        <TextField
-                            placeholder="Last Name"
-                            value={this.state.candidateDetails.lastName}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"lastName")}}
+                            value={this.state.candidateDetails.Name}
+                            onChange={(e) => { this.onChangeText(e.target.value, "Name") }}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="Owner Email"
                             value={this.state.candidateDetails.email}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"email")}}
+                            onChange={(e) => { this.onChangeText(e.target.value, "email") }}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="State"
                             value={this.state.candidateDetails.state}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"state")}}
+                            onChange={(e) => { this.onChangeText(e.target.value, "state") }}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="PinCode"
                             value={this.state.candidateDetails.pinCode}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"pinCode")}}
+                            onChange={(e) => { this.onChangeText(e.target.value, "pinCode") }}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="District"
                             value={this.state.candidateDetails.district}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"district")}}
+                            onChange={(e) => { this.onChangeText(e.target.value, "district") }}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="Town"
                             value={this.state.candidateDetails.town}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"town")}}
+                            onChange={(e) => { this.onChangeText(e.target.value, "town") }}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="Landmark"
                             value={this.state.candidateDetails.landmark}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"landmark")}}
+                            onChange={(e) => { this.onChangeText(e.target.value, "landmark") }}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="Village with Local name"
                             value={this.state.candidateDetails.village}
-                            onChange={(e)=> {this.onChangeText(e.target.value,"village")}}
+                            onChange={(e) => { this.onChangeText(e.target.value, "village") }}
                         />
                     </Grid>
                 </Grid>
@@ -159,50 +151,63 @@ class CandidateAbout extends React.Component {
     }
 }
 
-const AboutProperty = (props) => {
-    return (
-        <Container component={Paper}
-            sx={{
-                padding: "8px",
-                display: 'flex',
-                flexDirection: 'column',
-                gap: "8px", backgroundImage: `url(${pic_2})`,
-                backgroundSize: "cover",
-                backgroundRepeat: 'no-repeat',
-                backgroundColor: '#854a46',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}
-        >
-            <Grid component={Paper} width={'max-content'} padding={2} display={"flex"} flexDirection={'column'} gap={"10px"}>
-                <Grid item sx={12} md={6}>
-                    <TextField
-                        placeholder="Property Type"
-                    />
+class AboutProperty extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            propertType: "",
+            services: [],
+            propertyDetails: "",
+            otherDetails: "",
+            images: []
+        }
+    }
+
+    render() {
+        return (
+            <Container component={Paper}
+                sx={{
+                    padding: "8px",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: "8px", backgroundImage: `url(${pic_2})`,
+                    backgroundSize: "cover",
+                    backgroundRepeat: 'no-repeat',
+                    backgroundColor: '#854a46',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
+                <Grid component={Paper} width={'max-content'} padding={2} display={"flex"} flexDirection={'column'} gap={"10px"}>
+                    <Grid item sx={12} md={6}>
+                        <TextField
+                            placeholder="Property Type"
+                        />
+                    </Grid>
+                    <Grid item sx={12} md={6}>
+                        <TextField
+                            placeholder="Service"
+                        />
+                    </Grid>
+                    <Grid item sx={12} md={6}>
+                        <TextField
+                            placeholder="Property Details"
+                        />
+                    </Grid>
+                    <Grid item sx={12} md={6}>
+                        <TextField
+                            placeholder="Other Details"
+                        />
+                    </Grid>
+                    <Grid item sx={12} md={6}>
+                        <TextField
+                            placeholder="Image"
+                        />
+                    </Grid>
                 </Grid>
-                <Grid item sx={12} md={6}>
-                    <TextField
-                        placeholder="Service"
-                    />
-                </Grid>
-                <Grid item sx={12} md={6}>
-                    <TextField
-                        placeholder="Property Details"
-                    />
-                </Grid>
-                <Grid item sx={12} md={6}>
-                    <TextField
-                        placeholder="Other Details"
-                    />
-                </Grid>
-                <Grid item sx={12} md={6}>
-                    <TextField
-                        placeholder="Image"
-                    />
-                </Grid>
-            </Grid>
-        </Container>
-    )
+            </Container>
+        )
+    }
 }
 
 const AboutRent = (props) => {
@@ -262,8 +267,7 @@ class Room extends React.Component {
             skepped: new Set(),
             metaData: props.metaData,
             candidateDetails: {
-                firstName: "",
-                lastName: "",
+                Name: "",
                 email: "",
                 state: "",
                 pinCode: "",
@@ -327,11 +331,13 @@ class Room extends React.Component {
     handleNext = () => {
         this.setState({
             activeStep: this.state.activeStep + 1,
+        }, () => {
+            this.state.metaData.candidateDetails = this.state.candidateDetails
         })
     }
-    handleCandidateDataChange = (data,type) => {
-        if(type === "candidateDetails"){
-            this.setState({candidateDetails: data},()=>{console.log("state==>",this.state.candidateDetails)})
+    handleCandidateDataChange = (data, type) => {
+        if (type === "candidateDetails") {
+            this.setState({ candidateDetails: data })
         }
     }
 
@@ -366,6 +372,7 @@ class Room extends React.Component {
                                 {
                                     <step.description
                                         handleCandidateDataChange={this.handleCandidateDataChange}
+                                        metaData={this.state.metaData}
                                     />
                                 }
                                 <Box sx={{ mb: 2 }}>

@@ -4,6 +4,7 @@ import tractor_1 from "../image/tractor_1.jpg"
 import worker_1 from "../image/worker_1.jpg"
 import school_1 from "../image/school_1.jpg"
 import construction_1 from "../image/construction_1.avif"
+import roomImg  from "../image/roomImg.webp"
 
 
 
@@ -12,13 +13,12 @@ export const serviceList = ["Room Rent","Hospital Service","Tractor Rent","Gurda
 export const serviceListData = [
     {
         label:"Room Rent",
-        label_icon: car_1,
+        label_icon: roomImg,
         service_menu:[
-            "School",
-            "Shopping",
-            "Party",
-            "Hospital",
-            "Tour"
+            "Rent for Student",
+            "Rent",
+            "Rent for Store",
+            "Rent from warehouse"
         ]
     },
     {

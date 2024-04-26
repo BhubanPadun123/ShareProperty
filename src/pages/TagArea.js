@@ -15,7 +15,6 @@ class TagArea extends React.Component {
     }
 
     render() {
-        console.log("metaData==>", this.state.metaData)
         if (this.state.metaData.serviceType === serviceList[0]) {
             return (
                 <Room 

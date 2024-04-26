@@ -66,4 +66,34 @@ export class UserReducer {
         }
         return state
     }
+
+    ForgetPassword=(state = initialState, action)=> {
+        switch(action.type){
+            case actionTypes.FORGET_PASSWORD_STATUS:
+                state = {
+                    status:"started",
+                    response:[],
+                    error:{}
+                }
+                break;
+            case actionTypes.FORGET_PASSWORD_RESPONSE:
+                state = {
+                    status: "success",
+                    response: action.payload,
+                    error:{}
+                }
+                break;
+            case actionTypes.FORGET_PASSWORD_ERROR:
+                state = {
+                    status: "failed",
+                    response:[],
+                    error: action.payload
+                }
+                break;
+            default:
+                return state;
+        }
+
+        return state
+    }
 }

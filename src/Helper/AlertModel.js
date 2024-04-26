@@ -18,6 +18,8 @@ import {
 } from "@mui/icons-material"
 import { styled } from "@mui/material/styles"
 import { useNavigate } from "react-router-dom";
+import { ForgetPasswordAction } from "../Redux/actions/UserAction";
+import { useSelector,useDispatch } from "react-redux";
 
 
 const TextField = styled(MuiTextField)(({ theme }) => ({
@@ -33,6 +35,7 @@ const TextField = styled(MuiTextField)(({ theme }) => ({
 }));
 export const PasswordResetAlert = (props) => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const {
         position,
         onChange,
@@ -47,6 +50,17 @@ export const PasswordResetAlert = (props) => {
         confirmPassword:"",
         email:""
     })
+
+    const handleSubmit=async()=> {
+        if(state.newPassword === state.confirmPassword){
+            const data = {
+                email: state.email,
+                newPassword: state.newPassword,
+                cNewPassword: state.confirmPassword
+            }
+            await dispatch(ForgetPasswordAction(data))
+        }
+    }
 
     return (
         <div style={{
@@ -77,6 +91,7 @@ export const PasswordResetAlert = (props) => {
                             </InputAdornment>
                         )
                     }}
+                    onChange={(e)=> setState({...state,email:e.target.value})}
                 />
             </Grid>
             <Grid item sx={12}>
@@ -95,6 +110,7 @@ export const PasswordResetAlert = (props) => {
                             </InputAdornment>
                         )
                     }}
+                    onChange={(e) => setState({...state,newPassword:e.target.value})}
                 />
             </Grid>
             <Grid item sx={12}>
@@ -116,12 +132,14 @@ export const PasswordResetAlert = (props) => {
                             </InputAdornment>
                         )
                     }}
+                    onChange={(e) => setState({...state,confirmPassword:e.target.value})}
                 />
             </Grid>
             <Grid item sx={12}>
                 <Button
                     variant='contained'
                     sx={{margin:2}}
+                    onClick={handleSubmit}
                 >
                     Reset
                 </Button>

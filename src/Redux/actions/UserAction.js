@@ -56,28 +56,58 @@ export const UserLoginAction=(props)=> {
                 type: actionTypes.USER_LOGIN_STATUS,
                 payload:"started"
             })
-            dispatch({
-                type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
-                payload: {status:"loading"}
-            })
 
             const user = (await axios.post(`${config.baseUrl}/signin`,{props})).data
 
             if(user){
                 dispatch({
+                    type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                    payload:{status:"success",message:"User Login Successfull"}
+                })
+                dispatch({
                     type: actionTypes.USER_LOGIN_RESPONSE,
                     payload:"user Login successfull"
                 })
-                dispatch({
-                    type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
-                    payload:{staus:"success",message:"User Login Successfull"}
-                })
             }
         } catch (error) {
-            console.log(error)
             dispatch({
                 type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
                 payload:{status:"error",message:"Error while Login"}
+            })
+            dispatch({
+                type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                payload:{status:"error",message:"Error while Login"}
+            })
+        }
+    }
+}
+
+export const ForgetPasswordAction=(props)=>{
+    return async(dispatch)=> {
+        dispatch({
+            type: actionTypes.FORGET_PASSWORD_STATUS,
+            payload:{}
+        })
+
+        const responseData = (await axios.post(`${config.baseUrl}/forgot-password`,{props})).data
+
+        if(responseData){
+            dispatch({
+                type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                payload:{status:"success",message:"Password Updated successfully."}
+            })
+            dispatch({
+                type: actionTypes.FORGET_PASSWORD_RESPONSE,
+                payload: responseData
+            })
+        }else{
+            dispatch({
+                type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                payload:{status:"error",message:"Password Updated successfully."}
+            })
+            dispatch({
+                type: actionTypes.FORGET_PASSWORD_ERROR,
+                payload:"Error"
             })
         }
     }

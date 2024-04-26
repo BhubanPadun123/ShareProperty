@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types"
 import { serviceList, serviceListData } from "../utils/data"
 import TagArea from "./TagArea";
+import {connect} from "react-redux"
+import { SetGlobalNotification } from "../Redux/actions/NotificationAction";
 import {
     Container,
     Paper,
@@ -128,7 +130,12 @@ class JunctionPoint extends React.Component {
         metaData.candidateName = this.state.condiateName
         metaData.serviceList = this.state.availableService
         metaData.serviceType = this.state.rentType
-        this.setState({ isReady: true,metaData:metaData })
+        if(this.state.condiateName.length == 0 || this.state.availableService.length === 0){
+            this.props.SetGlobalNotification({status:"warning",message:"Fill's are mandatory!!"})
+        }
+        if(this.state.condiateName.length > 0 && this.state.availableService.length > 0){
+            this.setState({ isReady: true,metaData:metaData })
+        }
     }
 
     render() {
@@ -233,4 +240,13 @@ JunctionPoint.propTypes = {
 
 }
 
-export default JunctionPoint
+const mapStateToProps =(state)=>{
+    return{
+        state
+    }
+}
+
+
+export default connect(mapStateToProps,{
+    SetGlobalNotification
+})(JunctionPoint)
