@@ -2,6 +2,7 @@ import { UserReducer } from "./UserReducer";
 import { combineReducers } from "redux";
 import NotificationReducer from "./NotificationReducer";
 import { RoomReducerControl } from "./RoomReducer";
+import { GlobalReducer } from "./globalReducer";
 
 const userRelatedReducer = new UserReducer()
 const appNotification = new NotificationReducer()
@@ -12,7 +13,10 @@ const RootReducer = combineReducers({
     userLogin: userRelatedReducer.UserLoginReducer,
     globalNotification: appNotification.GlobalNotification,
     passwordReset: userRelatedReducer.ForgetPassword,
-    registerRoom: RoomReducer.roomRegisterReducer
+    registerRoom: RoomReducer.roomRegisterReducer,
+    postMetadata: RoomReducer.metaDataPostReducer,
+    getMetadata: RoomReducer.getMetadataReducer,
+    getAllService: new GlobalReducer().AllServiceReducer
 })
 
 export default RootReducer

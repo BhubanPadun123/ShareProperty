@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { serviceList } from "../utils/data"
 import Room from "./serviceComponents/Room/index";
 import HospitalService from "./serviceComponents/HospitalService";
+import Labour from "./serviceComponents/Labour";
 
 
 
@@ -15,6 +16,7 @@ class TagArea extends React.Component {
     }
 
     render() {
+        console.log(this.props.metaData)
         if (this.state.metaData.serviceType === serviceList[0]) {
             return (
                 <Room 
@@ -24,6 +26,12 @@ class TagArea extends React.Component {
         } else if(this.state.metaData.serviceType === serviceList[1]){
             return (
                 <HospitalService />
+            )
+        }else if(this.state.metaData.serviceType === serviceList[3]){
+            return(
+                <Labour 
+                   metaData={this.state.metaData}
+                />
             )
         } else {
             return (

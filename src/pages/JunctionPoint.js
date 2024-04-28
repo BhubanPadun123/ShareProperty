@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types"
 import { serviceList, serviceListData } from "../utils/data"
 import TagArea from "./TagArea";
-import {connect} from "react-redux"
+import { connect } from "react-redux"
 import { SetGlobalNotification } from "../Redux/actions/NotificationAction";
+import { RoomActionControl } from "../Redux/actions/RoomAction.js"
 import {
     Container,
     Paper,
@@ -23,6 +24,10 @@ import {
     Checkbox
 } from "@mui/material"
 
+const RoomAction = new RoomActionControl()
+const metaDataPort = RoomAction.handleMetadataPost
+const getMetaData = RoomAction.handleGetMetadata
+
 
 function HandleRentConfi(props) {
     const {
@@ -33,7 +38,7 @@ function HandleRentConfi(props) {
         handleServiceAppen,
         handleNameChange
     } = props
-    const [personName, setPersonName] = React.useState(availableService);
+    const [services, setServices] = React.useState(availableService);
     const [condiateName, setName] = React.useState(props.condiateName)
 
     const handleChange = (event) => {
@@ -41,7 +46,7 @@ function HandleRentConfi(props) {
             target: { value },
         } = event;
         handleServiceAppen(typeof value === 'string' ? value.split(',') : value)
-        setPersonName(typeof value === 'string' ? value.split(',') : value)
+        setServices(typeof value === 'string' ? value.split(',') : value)
     };
 
     return (
@@ -57,38 +62,42 @@ function HandleRentConfi(props) {
                     }}
                 />
             </Grid>
-            <Grid item sx={12} md={6} display={"flex"} flexDirection={'column'} gap={"10px"} justifyContent={'center'} alignItems={"center"}>
-                <Typography sx={{
-                    fontFamily: "Lato",
-                    fontWeight: 400,
-                    lineHeight: "14px",
-                    fontSize: "20px",
-                    fontStyle: 'normal'
-                }}>
-                    Select Options
-                </Typography>
-                <FormControl>
-                    <InputLabel>{`${label}  List`}</InputLabel>
-                    <Select fullWidth
-                        sx={{ minWidth: "240px" }}
-                        multiple
-                        value={personName}
-                        onChange={handleChange}
-                        input={<OutlinedInput label={`${label} List`} />}
-                        MenuProps={service_menu}
-                        renderValue={(selected) => selected.join(', ')}
-                    >
-                        {
-                            service_menu.map((item, idx) => (
-                                <MenuItem value={item} key={idx}>
-                                    <Checkbox checked={personName.indexOf(item) > -1} />
-                                    <ListItemText primary={item} />
-                                </MenuItem>
-                            ))
-                        }
-                    </Select>
-                </FormControl>
-            </Grid>
+            {
+                service_menu.length > 0 && (
+                    <Grid item sx={12} md={6} display={"flex"} flexDirection={'column'} gap={"10px"} justifyContent={'center'} alignItems={"center"}>
+                        <Typography sx={{
+                            fontFamily: "Lato",
+                            fontWeight: 400,
+                            lineHeight: "14px",
+                            fontSize: "20px",
+                            fontStyle: 'normal'
+                        }}>
+                            Select Options
+                        </Typography>
+                        <FormControl>
+                            <InputLabel>{`${label}  List`}</InputLabel>
+                            <Select fullWidth
+                                sx={{ minWidth: "240px" }}
+                                multiple
+                                value={services}
+                                onChange={handleChange}
+                                input={<OutlinedInput label={`${label} List`} />}
+                                MenuProps={service_menu}
+                                renderValue={(selected) => selected.join(', ')}
+                            >
+                                {
+                                    service_menu.map((item, idx) => (
+                                        <MenuItem value={item} key={idx}>
+                                            <Checkbox checked={services.indexOf(item) > -1} />
+                                            <ListItemText primary={item} />
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                )
+            }
 
         </Container>
     )
@@ -113,7 +122,7 @@ class JunctionPoint extends React.Component {
             availableService: [],
             condiateName: "",
             isReady: false,
-            metaData:{}
+            metaData: {}
         }
     }
 
@@ -129,17 +138,16 @@ class JunctionPoint extends React.Component {
         var metaData = {};
         metaData.candidateName = this.state.condiateName
         metaData.serviceList = this.state.availableService
-        metaData.serviceType = this.state.rentType
-        if(this.state.condiateName.length == 0 || this.state.availableService.length === 0){
-            this.props.SetGlobalNotification({status:"warning",message:"Fill's are mandatory!!"})
+        metaData.serviceType = this.state.selectedOption ? this.state.selectedOption.label : serviceList[0]
+        if (this.state.condiateName.length == 0) {
+            this.props.SetGlobalNotification({ status: "warning", message: "Fill's are mandatory!!" })
         }
-        if(this.state.condiateName.length > 0 && this.state.availableService.length > 0){
-            this.setState({ isReady: true,metaData:metaData })
+        if (this.state.condiateName.length > 0) {
+            this.setState({ isReady: true, metaData: metaData })
         }
     }
 
     render() {
-        console.log(this.props)
         return (
             <div className="col-md-12" style={{
                 width: "100%",
@@ -224,12 +232,12 @@ class JunctionPoint extends React.Component {
                                 </Grid>
                             </Container>
                         </Container>
-                    ):
-                    (
-                        <TagArea 
-                           metaData={this.state.metaData}
-                        />
-                    )
+                    ) :
+                        (
+                            <TagArea
+                                metaData={this.state.metaData}
+                            />
+                        )
                 }
             </div>
         )
@@ -240,13 +248,14 @@ JunctionPoint.propTypes = {
 
 }
 
-const mapStateToProps =(state)=>{
-    return{
+const mapStateToProps = (state) => {
+    return {
         state
     }
 }
 
 
-export default connect(mapStateToProps,{
-    SetGlobalNotification
+export default connect(mapStateToProps, {
+    SetGlobalNotification,
+    metaDataPort
 })(JunctionPoint)

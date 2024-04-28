@@ -20,6 +20,12 @@ import {
     CarRental
 } from "@mui/icons-material"
 import pic_2 from "../../../image/pic_2.avif"
+import { connect } from "react-redux"
+import { RoomActionControl } from "../../../Redux/actions/RoomAction";
+
+const RoomAction = new RoomActionControl()
+const metaDataPost = RoomAction.handleMetadataPost
+const getMetaData = RoomAction.handleGetMetadata
 
 
 class CandidateAbout extends React.Component {
@@ -155,11 +161,40 @@ class AboutProperty extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            propertType: "",
-            services: [],
-            propertyDetails: "",
-            otherDetails: "",
-            images: []
+            roomDetails: {
+                propertType: this.props.metaData ? this.props.metaData.serviceType ? this.props.metaData.serviceType : "" : "",
+                propertyDetails: "",
+                otherDetails: "",
+                images: [],
+                services: this.props.metaData ? this.props.metaData.serviceList ? this.props.serviceList : "" : "",
+                serviceDetails: "",
+                otherDetails: ""
+            }
+        }
+    }
+
+    handleValueChange = (e, type) => {
+        switch (type) {
+            case "propertyType":
+                this.setState((prevState) => ({ roomDetails: { ...prevState, propTypes: e } }), () => this.props.handleCandidateDataChange(this.state.roomDetails, "roomDetails"))
+                break;
+            case "propertyDetails":
+                this.setState((prevState) => ({ roomDetails: { ...prevState, propertyDetails: e } }), () => this.props.handleCandidateDataChange(this.state.roomDetails, "roomDetails"))
+                break;
+            case "otherDetails":
+                this.setState((prevState) => ({ roomDetails: { ...prevState, otherDetails: e } }), () => this.props.handleCandidateDataChange(this.state.roomDetails, "roomDetails"))
+                break;
+            case "service":
+                this.setState((prevState) => ({ roomDetails: { ...prevState, services: e } }), () => this.props.handleCandidateDataChange(this.state.roomDetails, "roomDetails"))
+                break;
+            case "serviceDetails":
+                this.setState((prevState) => ({ roomDetails: { ...prevState, serviceDetails: e } }), () => this.props.handleCandidateDataChange(this.state.roomDetails, "roomDetails"))
+                break;
+            // case "otherDetails":
+            //     this.setState((prevState) => ({ roomDetails: { ...prevState, otherDetails: e } }), () => this.props.handleCandidateDataChange(this.state.roomDetails, "roomDetails"))
+            //     break;
+            default:
+                return
         }
     }
 
@@ -182,21 +217,29 @@ class AboutProperty extends React.Component {
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="Property Type"
+                            value={this.state.roomDetails.propertType}
+                            onChange={(e) => this.handleValueChange(e.target.value, "propertyType")}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="Service"
+                            value={this.state.roomDetails.serviceDetails}
+                            onChange={(e) => this.handleValueChange(e.target.value,"serviceDetails")}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="Property Details"
+                            value={this.state.roomDetails.propertyDetails}
+                            onChange={(e)=> this.handleValueChange(e.target.value,"propertyDetails")}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
                         <TextField
                             placeholder="Other Details"
+                            value={this.state.roomDetails.otherDetails}
+                            onChange={(e)=> this.handleValueChange(e.target.value,"otherDetails")}
                         />
                     </Grid>
                     <Grid item sx={12} md={6}>
@@ -204,42 +247,69 @@ class AboutProperty extends React.Component {
                             placeholder="Image"
                         />
                     </Grid>
-                </Grid>
-            </Container>
+                </Grid >
+            </Container >
         )
     }
 }
 
-const AboutRent = (props) => {
+class AboutRent extends React.Component{
+    constructor(props){
+        super(props);
+        this.state ={
+            charges: {
+                amountChargeType:"",
+                amount:""
+            }
+        }
+    }
 
-    return (
-        <Container component={Paper}
-            sx={{
-                padding: "8px",
-                display: 'flex',
-                flexDirection: 'column',
-                gap: "8px", backgroundImage: `url(${pic_2})`,
-                backgroundSize: "cover",
-                backgroundRepeat: 'no-repeat',
-                backgroundColor: '#854a46',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}
-        >
-            <Grid component={Paper} width={'max-content'} padding={2} display={"flex"} flexDirection={'column'} gap={"10px"}>
-                <Grid item sx={12} md={6}>
-                    <TextField
-                        placeholder="Type of search amount"
-                    />
+    handleValueChange=(e,type)=>{
+        switch(type){
+            case "chargesTypes":
+                this.setState((prevState)=> ({charges:{...prevState,amountChargeType:e}}),()=> {this.props.handleCandidateDataChange(this.state.charges,"charges")})
+                break;
+            case "amount":
+                this.setState((prevState)=> ({charges:{...prevState,amount:e}}),()=> { this.props.handleCandidateDataChange(this.state.charges,"charges")})
+                break;
+            default:
+                return
+        }
+    }
+    render(){
+        return (
+            <Container component={Paper}
+                sx={{
+                    padding: "8px",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: "8px", backgroundImage: `url(${pic_2})`,
+                    backgroundSize: "cover",
+                    backgroundRepeat: 'no-repeat',
+                    backgroundColor: '#854a46',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
+                <Grid component={Paper} width={'max-content'} padding={2} display={"flex"} flexDirection={'column'} gap={"10px"}>
+                    <Grid item sx={12} md={6}>
+                        <TextField
+                            placeholder="Type of search amount"
+                            value={this.state.charges.amountChargeType}
+                            onChange={(e)=> this.handleValueChange(e.target.value,"chargesTypes")}
+                        />
+                    </Grid>
+                    <Grid item sx={12} md={6}>
+                        <TextField
+                            placeholder="Amount/Service"
+                            value={this.state.charges.amount}
+                            onChange={(e)=> this.handleValueChange(e.target.value,"amount")}
+                        />
+                    </Grid>
                 </Grid>
-                <Grid item sx={12} md={6}>
-                    <TextField
-                        placeholder="Amount/Service"
-                    />
-                </Grid>
-            </Grid>
-        </Container>
-    )
+            </Container>
+        )
+    }
 }
 
 const steps = [
@@ -283,6 +353,17 @@ class Room extends React.Component {
                 otherDetails: ""
             },
             propertyImage: []
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+    }
+
+    componentDidMount() {
+        const candidateName = localStorage.getItem("candidateName")
+
+        if (candidateName) {
+            this.props.getMetaData({ email: candidateName })
         }
     }
 
@@ -333,11 +414,23 @@ class Room extends React.Component {
             activeStep: this.state.activeStep + 1,
         }, () => {
             this.state.metaData.candidateDetails = this.state.candidateDetails
+            this.state.metaData.propertyDetails = this.state.propertyDetails
+            localStorage.getItem("candidateName", this.state.metaData.candidateDetails.email)
         })
     }
     handleCandidateDataChange = (data, type) => {
         if (type === "candidateDetails") {
             this.setState({ candidateDetails: data })
+        }else if(type === "roomDetails"){
+            this.setState({propertyDetails: data})
+        }
+    }
+
+    handleSubmit=()=> {
+        console.log(this.state.metaData.candidateDetails.email)
+
+        if(this.state.metaData.candidateDetails.email){
+            this.props.metaDataPost({ email: this.state.metaData.candidateDetails.email, metaData: this.state.metaData })
         }
     }
 
@@ -400,7 +493,7 @@ class Room extends React.Component {
                 {this.state.activeStep === steps.length && (
                     <Paper square elevation={0} sx={{ p: 3, width: 'max-content' }} >
                         <Typography>All steps completed - you&apos;re finished</Typography>
-                        <Button sx={{ mt: 1, mr: 1 }} variant='contained'>
+                        <Button sx={{ mt: 1, mr: 1 }} variant='contained' onClick={this.handleSubmit}>
                             Submit
                         </Button>
                     </Paper>
@@ -415,6 +508,15 @@ Room.propTypes = {
     metaData: PropTypes.object.isRequired
 }
 
-export default Room
+const mapStateToProps = (state) => {
+    return {
+        getMetadata: state.getMetadata.response
+    }
+}
+
+export default connect(mapStateToProps, {
+    metaDataPost,
+    getMetaData
+})(Room)
 
 

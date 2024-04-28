@@ -36,4 +36,54 @@ export class RoomActionControl{
             }
         }
     }
+
+    handleMetadataPost=(props)=> {
+        
+        return async(dispatch)=> {
+            dispatch({
+                type: actionTypes.METADATA_POST_STATUS,
+                payload: {}
+            })
+            
+            const postMetadata = (await axios.post(`${config.baseUrl}/metadata-post`,{props})).data
+
+            if(postMetadata){
+                dispatch({
+                    type: actionTypes.METADATA_POST_RESPONSE,
+                    payload: postMetadata
+                })
+                dispatch({
+                    type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                    payload:{status:"info",message:"Data Save successfully"}
+                })
+            }else{
+                dispatch({
+                    type: actionTypes.METADATA_POST_ERROR,
+                    payload: "Error"
+                })
+            }
+        }
+    }
+
+    handleGetMetadata=(props)=>{
+        console.log("from action==>",props)
+        return async(dispatch)=> {
+            dispatch({
+                type: actionTypes.GET_METADATA_STATUS,
+                payload:{}
+            })
+
+            await axios.get(`${config.baseUrl}/detadata/${props.email}`).then((res)=> {
+                dispatch({
+                    type: actionTypes.GET_METADATA_RESPONSE,
+                    payload: res.data
+                })
+            }).catch((error)=> {
+                dispatch({
+                    type: actionTypes.GET_METADATA_ERROR,
+                    payload: error
+                })
+            })
+        }
+    }
 }

@@ -59,15 +59,7 @@ export const serviceListData = [
     {
         label:"Gurdant Worker",
         label_icon: worker_1,
-        service_menu: [
-            "Dibrughar",
-            "Dhemaji",
-            "Silapother",
-            "Lokhimpur",
-            "Jorhat",
-            "Tezpur",
-            "Guwahati"
-        ]
+        service_menu: [ ]
     },
     {
         label:"Construction Worker",
