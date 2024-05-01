@@ -16,7 +16,7 @@ const Navbar = () => {
     }
   };
   return (
-    <header className="header">
+    <header className="col-md-12 w-100 header">
       <nav className="nav container">
         <NavLink to="/" className="nav__logo">
           Navigation Bar

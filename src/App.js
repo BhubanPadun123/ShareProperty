@@ -12,6 +12,7 @@ import PostPropert from "./pages/PostProperty";
 import JunctionPoint from "./pages/JunctionPoint";
 import ErrorPage from "./pages/ErrorPage";
 import GlobalNotification from "./Helper/GlobalNotification";
+import UpdateProperty from "./Helper/UpdateProperty";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/room-service" element={<PostPropert />} />
           <Route path="/post" element={<JunctionPoint />} />
+          <Route path="/update" element={<UpdateProperty />} />
           <Route path="*" element={<ErrorPage/>} />
         </Routes>
       </main>

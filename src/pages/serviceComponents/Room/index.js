@@ -22,6 +22,7 @@ import {
 import pic_2 from "../../../image/pic_2.avif"
 import { connect } from "react-redux"
 import { RoomActionControl } from "../../../Redux/actions/RoomAction";
+import { SetGlobalNotification } from "../../../Redux/actions/NotificationAction";
 
 const RoomAction = new RoomActionControl()
 const metaDataPost = RoomAction.handleMetadataPost
@@ -435,6 +436,11 @@ class Room extends React.Component {
     }
 
     render() {
+        console.log(this.props)
+        const {status} = this.props
+        if(status === "failed"){
+            this.props.SetGlobalNotification({status:status,message:"Error while post room data.Try again"})
+        }
         return (
             <Box sx={{ width: "100%", display: "flex", justifyContent: "center", flexDirection: 'column', alignItems: "center" }}>
                 <Stepper activeStep={this.state.activeStep} orientation="vertical">
@@ -498,7 +504,6 @@ class Room extends React.Component {
                         </Button>
                     </Paper>
                 )}
-
             </Box>
         )
     }
@@ -510,13 +515,16 @@ Room.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        getMetadata: state.getMetadata.response
+        getMetadata: state.getMetadata.response,
+        postMetadataResponse:state.postMetadata.response,
+        status: state.postMetadata.status  
     }
 }
 
 export default connect(mapStateToProps, {
     metaDataPost,
-    getMetaData
+    getMetaData,
+    SetGlobalNotification
 })(Room)
 
 

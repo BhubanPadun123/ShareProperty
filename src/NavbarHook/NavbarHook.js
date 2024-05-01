@@ -68,6 +68,15 @@ const NavbarHook = () => {
         </li>
         <li>
           <NavLink
+            to="/update"
+            className={linkClassName}
+            onClick={closeMobileMenu}
+          >
+            Update
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
             to="/signup"
             className={`${linkClassName} ${buttonClassName}`}
             onClick={closeMobileMenu}

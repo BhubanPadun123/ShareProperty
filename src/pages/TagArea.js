@@ -4,6 +4,7 @@ import { serviceList } from "../utils/data"
 import Room from "./serviceComponents/Room/index";
 import HospitalService from "./serviceComponents/HospitalService";
 import Labour from "./serviceComponents/Labour";
+import Tractor from "./serviceComponents/Tractor/index"
 
 
 
@@ -16,7 +17,6 @@ class TagArea extends React.Component {
     }
 
     render() {
-        console.log(this.props.metaData)
         if (this.state.metaData.serviceType === serviceList[0]) {
             return (
                 <Room 
@@ -31,6 +31,12 @@ class TagArea extends React.Component {
             return(
                 <Labour 
                    metaData={this.state.metaData}
+                />
+            )
+        } else if(this.state.metaData.serviceType === serviceList[2]){
+            return(
+                <Tractor 
+                  metaData={this.state.metaData}
                 />
             )
         } else {
