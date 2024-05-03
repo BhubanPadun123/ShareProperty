@@ -6,12 +6,14 @@ import {
     Container,
     Paper,
     TextField,
-    Button
+    Button,
+    Avatar
 } from "@mui/material";
 
 import { connect } from "react-redux"
 import { RoomActionControl } from "../../../Redux/actions/RoomAction";
 import { SetGlobalNotification } from "../../../Redux/actions/NotificationAction";
+import PhotoUploader from "../../../Helper/PhotoUploader";
 
 const handleMetadataPost = new RoomActionControl().handleMetadataPost
 
@@ -30,12 +32,14 @@ class Labour extends React.Component {
                 pinCode: "",
                 village: ""
             },
-            metaData: this.props.metaData
+            metaData: this.props.metaData,
+            profilePhoto:null
         }
     }
 
     handleSubmit = () => {
         if (this.checkEmployeeData(this.state.empliyeeData)){
+            this.state.metaData.profilePhoto = this.state.profilePhoto ? URL.createObjectURL(this.state.profilePhoto) : null
             const data = {
                 email: this.state.metaData.email,
                 metaData: this.state.metaData
@@ -83,6 +87,12 @@ class Labour extends React.Component {
                     }}>
                         Employee Registration Form.
                     </Typography>
+                    <Grid sx={12} md={12} display={'flex'} justifyContent={'center'}>
+                        <Avatar 
+                          alt="Profile Banner"
+                          src={ this.state.profilePhoto && URL.createObjectURL(this.state.profilePhoto)}
+                        />
+                    </Grid>
                     <Grid sx={12} md={12} lg={12}>
                         <TextField
                             placeholder="Employee Name"
@@ -154,6 +164,18 @@ class Labour extends React.Component {
                             onChange={(e) => this.setState((prevState) => ({ empliyeeData: { ...prevState, village: e.target.value } }), () => {
                                 this.state.metaData.village = this.state.empliyeeData.village
                             })}
+                        />
+                    </Grid>                    
+                    <Grid sx={12} md={12}>
+                        <PhotoUploader 
+                           title={"Select Photo To show for Banner"}
+                           photoAccept={"Support only jpg/png"}
+                           onSelect={(e)=> {
+                            this.setState({profilePhoto: e[0]})
+                           }}
+                           allowClick={true}
+                           allowDrag={false}
+                           multiple={false}
                         />
                     </Grid>
                     <Grid sx={12} md={12} lg={12}>

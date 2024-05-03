@@ -130,7 +130,7 @@ const Home = (props) => {
 };
 
 const mapStateToProps = (state)=> {
-
+  console.log(state,"<=====")
   return {
     serviceList: state.getAllService
   }

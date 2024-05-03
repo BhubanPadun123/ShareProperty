@@ -44,29 +44,34 @@ export class RoomActionControl{
                 type: actionTypes.METADATA_POST_STATUS,
                 payload: {}
             })
-            
-            const postMetadata = (await axios.post(`${config.baseUrl}/metadata-post`,{props})).data
-
-            if(postMetadata){
-                dispatch({
-                    type: actionTypes.METADATA_POST_RESPONSE,
-                    payload: postMetadata
-                })
-                dispatch({
-                    type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
-                    payload:{status:"info",message:"Data Save successfully"}
-                })
-            }else{
+            try{
+                const postMetadata = await axios.post(`${config.baseUrl}/metadata-post`,{props})
+                if(postMetadata){
+                    dispatch({
+                        type: actionTypes.METADATA_POST_RESPONSE,
+                        payload: postMetadata.data
+                    })
+                    dispatch({
+                        type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                        payload:{status:"info",message:"Data Save successfully"}
+                    })
+                }
+                if(!postMetadata){
+                    dispatch({
+                        type: actionTypes.METADATA_POST_ERROR,
+                        payload: "Error"
+                    })
+                }
+            }catch(error){
                 dispatch({
                     type: actionTypes.METADATA_POST_ERROR,
-                    payload: "Error"
+                    payload:error
                 })
             }
         }
     }
 
     handleGetMetadata=(props)=>{
-        console.log("from action==>",props)
         return async(dispatch)=> {
             dispatch({
                 type: actionTypes.GET_METADATA_STATUS,

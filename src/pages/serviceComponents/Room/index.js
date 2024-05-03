@@ -23,6 +23,7 @@ import pic_2 from "../../../image/pic_2.avif"
 import { connect } from "react-redux"
 import { RoomActionControl } from "../../../Redux/actions/RoomAction";
 import { SetGlobalNotification } from "../../../Redux/actions/NotificationAction";
+import {DNALoader} from "../../../Helper/Loader"
 
 const RoomAction = new RoomActionControl()
 const metaDataPost = RoomAction.handleMetadataPost
@@ -358,15 +359,13 @@ class Room extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-    }
-
-    componentDidMount() {
-        const candidateName = localStorage.getItem("candidateName")
-
-        if (candidateName) {
-            this.props.getMetaData({ email: candidateName })
+        if(Object.entries(nextProps.getMetadata).length > 0){
+            if(nextProps.getMetadata.status === "success"){
+                console.log(nextProps.getMetadata.info)
+            }
         }
     }
+
 
     handleSelectIcons = (name) => {
         let iconNode = null
@@ -416,7 +415,7 @@ class Room extends React.Component {
         }, () => {
             this.state.metaData.candidateDetails = this.state.candidateDetails
             this.state.metaData.propertyDetails = this.state.propertyDetails
-            localStorage.getItem("candidateName", this.state.metaData.candidateDetails.email)
+            this.props.getMetaData({ email: this.state.metaData.candidateDetails.email })
         })
     }
     handleCandidateDataChange = (data, type) => {
@@ -436,10 +435,11 @@ class Room extends React.Component {
     }
 
     render() {
-        console.log(this.props)
+
+        
         const {status} = this.props
         if(status === "failed"){
-            this.props.SetGlobalNotification({status:status,message:"Error while post room data.Try again"})
+            this.props.SetGlobalNotification({status:"error",message:this.props.error.response.data.info})
         }
         return (
             <Box sx={{ width: "100%", display: "flex", justifyContent: "center", flexDirection: 'column', alignItems: "center" }}>
@@ -504,6 +504,11 @@ class Room extends React.Component {
                         </Button>
                     </Paper>
                 )}
+                {
+                    this.props.status === "started" && (
+                        <DNALoader />
+                    )
+                }
             </Box>
         )
     }
@@ -514,10 +519,13 @@ Room.propTypes = {
 }
 
 const mapStateToProps = (state) => {
+
     return {
         getMetadata: state.getMetadata.response,
         postMetadataResponse:state.postMetadata.response,
-        status: state.postMetadata.status  
+        status: state.postMetadata.status ,
+        error: state.postMetadata.error,
+        userDataData: state.getMetadata.response
     }
 }
 
