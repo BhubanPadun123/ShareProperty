@@ -16,7 +16,9 @@ const RootReducer = combineReducers({
     registerRoom: RoomReducer.roomRegisterReducer,
     postMetadata: RoomReducer.metaDataPostReducer,
     getMetadata: RoomReducer.getMetadataReducer,
-    getAllService: new GlobalReducer().AllServiceReducer
+    getAllService: new GlobalReducer().AllServiceReducer,
+    imageReducer: new GlobalReducer().UploadImageReducer,
+    imageDeleteReducer: new GlobalReducer().DeleteImageReducer
 })
 
 export default RootReducer

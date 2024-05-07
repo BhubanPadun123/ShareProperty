@@ -36,10 +36,12 @@ function HandleRentConfi(props) {
         service_menu,
         availableService,
         handleServiceAppen,
-        handleNameChange
+        handleNameChange,
+        handleEmailChange
     } = props
     const [services, setServices] = React.useState(availableService);
     const [condiateName, setName] = React.useState(props.condiateName)
+    const [email,setEmail] = React.useState(props.email)
 
     const handleChange = (event) => {
         const {
@@ -59,6 +61,16 @@ function HandleRentConfi(props) {
                     onChange={(e) => {
                         handleNameChange(e.target.value)
                         setName(e.target.value)
+                    }}
+                />
+            </Grid>
+            <Grid item sx={12} md={6}>
+                <TextField
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => {
+                        handleEmailChange(e)
+                        setEmail(e.target.value)
                     }}
                 />
             </Grid>
@@ -122,7 +134,8 @@ class JunctionPoint extends React.Component {
             availableService: [],
             condiateName: "",
             isReady: false,
-            metaData: {}
+            metaData: {},
+            email:""
         }
     }
 
@@ -139,10 +152,11 @@ class JunctionPoint extends React.Component {
         metaData.candidateName = this.state.condiateName
         metaData.serviceList = this.state.availableService
         metaData.serviceType = this.state.selectedOption ? this.state.selectedOption.label : serviceList[0]
+        metaData.email = this.state.email
         if (this.state.condiateName.length == 0) {
             this.props.SetGlobalNotification({ status: "warning", message: "Fill's are mandatory!!" })
         }
-        if (this.state.condiateName.length > 0) {
+        if (this.state.condiateName.length > 0 && this.state.email) {
             this.setState({ isReady: true, metaData: metaData })
         }
     }
@@ -213,6 +227,8 @@ class JunctionPoint extends React.Component {
                                                 availableService={this.state.availableService}
                                                 handleNameChange={(e) => this.setState({ condiateName: e })}
                                                 condiateName={this.state.condiateName}
+                                                handleEmailChange = {(e)=> {this.setState({email:e.target.value})}}
+                                                email={this.state.email}
                                             /> :
                                             <HandleRentConfi
                                                 label={serviceListData[0].label}
@@ -222,6 +238,8 @@ class JunctionPoint extends React.Component {
                                                 availableService={this.state.availableService}
                                                 handleNameChange={(e) => this.setState({ condiateName: e })}
                                                 condiateName={this.state.condiateName}
+                                                handleEmailChange = {(e)=> {this.setState({email:e.target.value})}}
+                                                email={this.state.email}
                                             />
                                     }
                                 </Grid>

@@ -1,0 +1,309 @@
+[
+{
+"id": "5caa7498-3229-4f63-a537-6475abbb0dbb",
+"label": [
+"cow"
+],
+"shape": "circle",
+"points": [
+[
+0.5581709271914284,
+0.523749261790264
+],
+[
+97.6933979345585,
+97.6933979345585
+],
+[
+0.6189150426052477,
+0.54939677718721
+]
+],
+"notes": "",
+"attributes": {
+"cow family": [
+"cow_1",
+"cow_2",
+"cow_3"
+]
+},
+"subAttributes": {
+"cow_1": [
+"aa"
+],
+"cow_2": [
+"cow2_sub1"
+],
+"cow_3": [
+"cow2_sub2",
+"cow2_sub4",
+"cow2_sub3",
+"cow2_sub1"
+]
+},
+"imageWidth": 600,
+"imageHeight": 600
+},
+{
+"id": "33ed8ac4-c9f0-42de-be0a-bd4226bb350a",
+"label": [
+"Dog"
+],
+"shape": "circle",
+"points": [
+[
+0.39866137967884363,
+0.36536460530386117
+],
+[
+145.2618325645109,
+145.2618325645109
+],
+[
+0.28617227706065973,
+0.43195815405382604
+]
+],
+"notes": "",
+"attributes": {
+"Dog family": [
+"dog_3"
+]
+},
+"subAttributes": {
+"dog_3": [
+"d3_s_1",
+"d3_s_2",
+"d3_s_3",
+"d3_s_4"
+]
+},
+"imageWidth": 600,
+"imageHeight": 600
+}
+]
+
+
+
+
+
+
+// Web Audio example
+
+import WaveSurfer from 'wavesurfer.js'
+
+// Create your own media element
+const audio = new Audio()
+audio.controls = true
+audio.src = '/examples/audio/audio.wav'
+
+// Create a WaveSurfer instance and pass the media element
+const wavesurfer = WaveSurfer.create({
+container: document.body,
+waveColor: 'rgb(200, 0, 200)',
+progressColor: 'rgb(100, 0, 100)',
+media: audio, // <- this is the important part
+})
+
+// Optionally, add the audio to the page to see the controls
+document.body.appendChild(audio)
+
+// Now, create a Web Audio equalizer
+
+// Create Web Audio context
+const audioContext = new AudioContext()
+
+// Define the equalizer bands
+const eqBands = [800]
+
+// Create a biquad filter for each band
+const filtersLeft = eqBands.map((band) => {
+const filter = audioContext.createBiquadFilter();
+filter.type = band <= 32 ? 'lowshelf' : band >= 16000 ? 'highshelf' : 'peaking';
+filter.gain.value = Math.random() * 40 - 20;
+filter.Q.value = 1; // resonance
+filter.frequency.value = band; // the cut-off frequency
+return filter;
+});
+
+const filtersRight = eqBands.map((band) => {
+const filter = audioContext.createBiquadFilter();
+filter.type = band <= 32 ? 'lowshelf' : band >= 16000 ? 'highshelf' : 'peaking';
+filter.gain.value = Math.random() * 40 - 20;
+filter.Q.value = 1; // resonance
+filter.frequency.value = band; // the cut-off frequency
+return filter;
+});
+
+const filters = [...filtersLeft, ...filtersRight]
+const mediaNode = audioContext.createMediaElementSource(audio);
+var splitter = audioContext.createChannelSplitter(2)
+mediaNode.connect(splitter);
+
+const leftChannel = filtersLeft.reduce((prev, curr) => {
+prev.connect(curr);
+return curr;
+}, splitter, 0); // Connect to the first channel (left)
+
+// Connect the right channel filters
+const rightChannel = filtersRight.reduce((prev, curr) => {
+prev.connect(curr);
+return curr;
+}, splitter, 1); // Connect to the second channel (right)
+
+const merger = audioContext.createChannelMerger(2);
+leftChannel.connect(merger, 0, 0); // Left channel
+rightChannel.connect(merger, 0, 1); // Right channel
+
+// Connect the audio to the equalizer
+audio.addEventListener(
+'canplay',
+() => {
+// Create a MediaElementSourceNode from the audio element
+// const mediaNode = audioContext.createMediaElementSource(audio)
+
+// Connect the filters and media node sequentially
+const equalizer = filters.reduce((prev, curr) => {
+prev.connect(curr)
+return curr
+}, mediaNode)
+
+// Connect the filters to the audio output
+equalizer.connect(audioContext.destination)
+},
+{ once: true },
+)
+
+// Create a vertical slider for each band
+const container = document.createElement('p')
+filters.forEach((filter) => {
+const slider = document.createElement('input')
+slider.type = 'range'
+slider.orient = 'vertical'
+slider.style.appearance = 'slider-vertical'
+slider.style.width = '8%'
+slider.min = -40
+slider.max = 40
+slider.value = filter.gain.value
+slider.step = 0.1
+slider.oninput = (e) => (filter.gain.value = e.target.value)
+container.appendChild(slider)
+})
+document.body.appendChild(container)
+
+
+
+
+
+
+
+and this another 
+
+
+
+
+
+
+import WaveSurfer from 'wavesurfer.js'
+
+// Create your own media element
+const audio = new Audio()
+audio.controls = true
+audio.src = '/examples/audio/audio.wav'
+
+// Create a WaveSurfer instance and pass the media element
+const wavesurfer = WaveSurfer.create({
+container: document.body,
+waveColor: 'rgb(200, 0, 200)',
+progressColor: 'rgb(100, 0, 100)',
+media: audio, // <- this is the important part
+})
+
+// Optionally, add the audio to the page to see the controls
+document.body.appendChild(audio)
+
+// Now, create a Web Audio equalizer
+
+// Create Web Audio context
+const audioContext = new AudioContext()
+
+// Define the equalizer bands
+const eqBands = [1000]
+
+// Create a biquad filter for each band
+const filtersLeft = eqBands.map((band) => {
+const filter = audioContext.createBiquadFilter();
+filter.type = band <= 32 ? 'lowshelf' : band >= 16000 ? 'highshelf' : 'peaking';
+filter.gain.value = Math.random() * 40 - 20;
+filter.Q.value = 1; // resonance
+filter.frequency.value = band; // the cut-off frequency
+return filter;
+});
+
+const filtersRight = eqBands.map((band) => {
+const filter = audioContext.createBiquadFilter();
+filter.type = band <= 32 ? 'lowshelf' : band >= 16000 ? 'highshelf' : 'peaking';
+filter.gain.value = Math.random() * 40 - 20;
+filter.Q.value = 1; // resonance
+filter.frequency.value = band; // the cut-off frequency
+return filter;
+});
+
+const filters = [...filtersLeft, ...filtersRight]
+
+// Create a MediaElementSourceNode from the audio element
+const mediaNode = audioContext.createMediaElementSource(audio);
+
+// Create ChannelSplitterNode to split the audio into left and right channels
+const splitter = audioContext.createChannelSplitter(2);
+mediaNode.connect(splitter);
+
+// Connect the left channel filters
+const leftChannel = filtersLeft.reduce((prev, curr) => {
+prev.connect(curr);
+return curr;
+}, splitter, 0); // Connect to the first channel (left)
+
+// Connect the right channel filters
+const rightChannel = filtersRight.reduce((prev, curr) => {
+prev.connect(curr);
+return curr;
+}, splitter, 1); // Connect to the second channel (right)
+
+// Merge the left and right channels back into stereo
+const merger = audioContext.createChannelMerger(2);
+leftChannel.connect(merger, 0, 0); // Left channel
+rightChannel.connect(merger, 0, 1); // Right channel
+
+// Connect the equalizer to the audio output
+merger.connect(audioContext.destination);
+
+// Create vertical sliders for left and right volume control
+const leftSlider = document.createElement('input');
+leftSlider.type = 'range';
+leftSlider.orient = 'vertical';
+leftSlider.style.width = '8%';
+leftSlider.min = -40;
+leftSlider.max = 40;
+leftSlider.value = 0; // Initial value
+leftSlider.step = 0.1;
+leftSlider.oninput = (e) => (leftChannel.gain.value = e.target.value);
+
+const rightSlider = document.createElement('input');
+rightSlider.type = 'range';
+rightSlider.orient = 'vertical';
+rightSlider.style.width = '8%';
+rightSlider.min = -40;
+rightSlider.max = 40;
+rightSlider.value = 0; // Initial value
+rightSlider.step = 0.1;
+rightSlider.oninput = (e) => (rightChannel.gain.value = e.target.value);
+
+// Create containers for sliders
+const leftContainer = document.createElement('p');
+leftContainer.appendChild(leftSlider);
+document.body.appendChild(leftContainer);
+
+const rightContainer = document.createElement('p');
+rightContainer.appendChild(rightSlider);
+document.body.appendChild(rightContainer);

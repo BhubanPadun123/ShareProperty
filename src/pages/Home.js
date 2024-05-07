@@ -1,7 +1,7 @@
 import React from "react";
 import { DNALoader } from "../Helper/Loader"
-import { 
-  HomeHeader ,
+import {
+  HomeHeader,
   RoomCard
 } from "../Helper/HomeHeader"
 import {
@@ -11,61 +11,42 @@ import {
   Paper
 } from "@mui/material"
 import GlobalAction from "../Redux/actions/GlobalAction";
-import {connect} from "react-redux"
+import { connect } from "react-redux"
 import { SetGlobalNotification } from "../Redux/actions/NotificationAction.js";
 import PopOver from "../Helper/PopOver.js";
 import { serviceList } from "../utils/data.js";
+import "../Helper/styles/HomeStyles.css"
 
 
 const HandleGetAllService = new GlobalAction().HandleGetAllService
 
 const Home = (props) => {
 
-  const [state,setState] = React.useState({
-    serviceList:[],
+  const [state, setState] = React.useState({
+    serviceList: [],
     showLoading: false,
     anchorElPopover: null
   })
 
-  React.useEffect(()=>{
-    const fetchServiceList = async()=>{
+  React.useEffect(() => {
+    const fetchServiceList = async () => {
       try {
         await props.HandleGetAllService()
+        setState({ ...state, serviceList: props.dataList })
       } catch (error) {
-        console.log("Error==>",error)
+        console.log("Error==>", error)
       }
     }
     fetchServiceList()
-  },[])
+  }, [])
 
-  React.useEffect(()=>{
-    if(props.serviceList.status && props.serviceList.status === "started"){
-      setState({...state,showLoading: true})
-    }else if(props.serviceList.status && props.serviceList.status === "success"){
-      const {
-        response
-        } = props.serviceList
-        if(response){
-          setState({
-            ...state,
-            showLoading: false,
-            serviceList : response.info
-          })
-        }
-    }else if(props.serviceList.status && props.serviceList.status === "error"){
-      props.SetGlobalNotification({
-        status:"error",
-        message:"Error while data Fetch.....Please try again."
-      })
-    }
-  },[props.serviceList])
 
-  const handleClickFilter=(data)=> {
-    setState({...state,anchorElPopover:data.currentTarget})
+  const handleClickFilter = (data) => {
+    setState({ ...state, anchorElPopover: data.currentTarget })
   }
 
-  const handleFilter =(data)=> {
-    console.log(data,state.serviceList)
+  const handleFilter = (data) => {
+    console.log(data, state.serviceList)
   }
 
   return (
@@ -74,27 +55,27 @@ const Home = (props) => {
       textAlign: 'center',
       paddingTop: 2
     }} component={Paper}>
-      <HomeHeader 
+      <HomeHeader
         handleClickFilter={handleClickFilter}
       />
       <Paper>
         <PopOver
-           anchorEl = {state.anchorElPopover}
-           handleClose={()=> {setState({...state,anchorElPopover: null})}}
-           childNode={
+          anchorEl={state.anchorElPopover}
+          handleClose={() => { setState({ ...state, anchorElPopover: null }) }}
+          childNode={
             <div>
               {
-                serviceList.map((item,index)=> (
+                serviceList.map((item, index) => (
                   <div key={index} style={{
                     backgroundColor: index % 2 === 0 ? "#cfaeab" : "#d97e77"
                   }}>
                     <Button
                       fullWidth
                       sx={{
-                        textAlign:'left',
-                        width:"100%"
+                        textAlign: 'left',
+                        width: "100%"
                       }}
-                      onClick={()=> handleFilter(item)}
+                      onClick={() => handleFilter(item)}
                     >
                       {
                         item
@@ -104,24 +85,39 @@ const Home = (props) => {
                 ))
               }
             </div>
-           }
+          }
         />
         {
-          Array.isArray(state.serviceList) && state.serviceList.length > 0 && 
-          state.serviceList.map((item,index)=> {
-            if(item.metaData.serviceType=== "Room Rent"){
-              return (
-                <RoomCard 
-                   key={index}
-                   metaData={item}
-                />
-              )
-            }
-          })
+          Array.isArray(state.serviceList) && state.serviceList.length > 0 && (
+            <div className="col-md-12">
+              <ul className="cards">
+                {
+                  (state.serviceList || props.dataList).map((item, index) => (
+                    <RoomCard
+                      key={index}
+                      metaData={item}
+                    />
+                  ))
+                }
+              </ul>
+            </div>
+          )
         }
         {
-          state.showLoading && (
-            <DNALoader />
+          props.status === "started" && (
+            <div className="col-md-12" style={{
+              position: "absolute",
+              top: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "GrayText",
+              opacity: 0.8
+            }}>
+              <DNALoader />
+            </div>
           )
         }
       </Paper>
@@ -129,14 +125,16 @@ const Home = (props) => {
   );
 };
 
-const mapStateToProps = (state)=> {
-  console.log(state,"<=====")
+const mapStateToProps = (state) => {
+
   return {
-    serviceList: state.getAllService
+    serviceList: state.getAllService,
+    dataList: state.getAllService.status === "success" ? state.getAllService.response.info : state.getAllService.response,
+    status: state.getAllService.status
   }
 }
 
-export default connect(mapStateToProps,{
+export default connect(mapStateToProps, {
   HandleGetAllService,
   SetGlobalNotification
 })(Home)

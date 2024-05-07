@@ -9,40 +9,51 @@ import {
     Typography,
     Button
 } from "@mui/material"
-import {RoomActionControl} from "../../../Redux/actions/RoomAction.js"
+import { RoomActionControl } from "../../../Redux/actions/RoomAction.js"
+import {
+    Card
+} from "react-bootstrap"
+import PhotoUploader from "../../../Helper/PhotoUploader.js";
+import { SetGlobalNotification } from "../../../Redux/actions/NotificationAction.js";
+import GlobalAction from "../../../Redux/actions/GlobalAction.js";
 
 const handePostMetaData = new RoomActionControl().handleMetadataPost
+const uploadImage = new GlobalAction().HandleImageUpload
+const deleteImage = new GlobalAction().HandleImageDelete
 
 
 function Tractor(props) {
 
     const [state, setState] = React.useState({
         metaData: props.metaData,
-        addressDetails:{},
-        contactDetail:{},
-        amountChargeDetail:[],
-        currentAmountInput:""
+        addressDetails: {},
+        contactDetail: {},
+        amountChargeDetail: [],
+        currentAmountInput: "",
+        images: []
     })
 
-    const handleSubmit=()=>{
-        if(Object.entries(state.addressDetails).length > 0){
+    console.log(props.metaData, "<===")
+
+    const handleSubmit = () => {
+        if (Object.entries(state.addressDetails).length > 0) {
             state.metaData.addressDetails = state.addressDetails
-        }else{
+        } else {
             return
         }
-        if(Object.entries(state.amountChargeDetail).length > 0){
+        if (Object.entries(state.amountChargeDetail).length > 0) {
             state.metaData.amountChargeDetail = state.amountChargeDetail
-        }else{
+        } else {
             return
         }
-        if(Object.entries(state.contactDetail).length > 0){
+        if (Object.entries(state.contactDetail).length > 0) {
             state.metaData.contactDetails = state.contactDetail
-        }else{
+        } else {
             return
         }
-        console.log(props)
+        state.metaData.images = state.images
         let data = {
-            email:state.contactDetail.email,
+            email: state.contactDetail.email,
             metaData: state.metaData
         }
         props.handePostMetaData(data)
@@ -85,17 +96,17 @@ function Tractor(props) {
                             placeholder="State"
                             variant='outlined'
                             label="State"
-                            onChange={(e)=> {
+                            onChange={(e) => {
                                 let stateValue = e.target.value
-                                setState((prevState)=> {
+                                setState((prevState) => {
                                     return {
                                         metaData: prevState.metaData,
-                                        addressDetails:{
+                                        addressDetails: {
                                             ...prevState.addressDetails,
                                             state: stateValue
                                         },
-                                        amountChargeDetail:prevState.amountChargeDetail,
-                                        contactDetail:prevState.contactDetail
+                                        amountChargeDetail: prevState.amountChargeDetail,
+                                        contactDetail: prevState.contactDetail
                                     }
                                 })
                             }}
@@ -106,17 +117,17 @@ function Tractor(props) {
                             placeholder="District"
                             variant='outlined'
                             label="District"
-                            onChange={(e)=> {
+                            onChange={(e) => {
                                 let districtValue = e.target.value
-                                setState((prevState)=> {
+                                setState((prevState) => {
                                     return {
                                         metaData: prevState.metaData,
-                                        addressDetails:{
+                                        addressDetails: {
                                             ...prevState.addressDetails,
                                             district: districtValue
                                         },
-                                        amountChargeDetail:prevState.amountChargeDetail,
-                                        contactDetail:prevState.contactDetail
+                                        amountChargeDetail: prevState.amountChargeDetail,
+                                        contactDetail: prevState.contactDetail
                                     }
                                 })
                             }}
@@ -127,17 +138,17 @@ function Tractor(props) {
                             placeholder="Town"
                             variant='outlined'
                             label="Town"
-                            onChange={(e)=> {
+                            onChange={(e) => {
                                 let town = e.target.value
-                                setState((prevState)=> {
+                                setState((prevState) => {
                                     return {
                                         metaData: prevState.metaData,
-                                        addressDetails:{
+                                        addressDetails: {
                                             ...prevState.addressDetails,
                                             town: town
                                         },
-                                        amountChargeDetail:prevState.amountChargeDetail,
-                                        contactDetail:prevState.contactDetail
+                                        amountChargeDetail: prevState.amountChargeDetail,
+                                        contactDetail: prevState.contactDetail
                                     }
                                 })
                             }}
@@ -148,17 +159,17 @@ function Tractor(props) {
                             placeholder="PIN-CODE"
                             variant='outlined'
                             label="PIN-CODE"
-                            onChange={(e)=> {
+                            onChange={(e) => {
                                 let pinValue = e.target.value
-                                setState((prevState)=> {
+                                setState((prevState) => {
                                     return {
                                         metaData: prevState.metaData,
-                                        addressDetails:{
+                                        addressDetails: {
                                             ...prevState.addressDetails,
                                             pinCode: pinValue
                                         },
-                                        amountChargeDetail:prevState.amountChargeDetail,
-                                        contactDetail:prevState.contactDetail
+                                        amountChargeDetail: prevState.amountChargeDetail,
+                                        contactDetail: prevState.contactDetail
                                     }
                                 })
                             }}
@@ -169,17 +180,17 @@ function Tractor(props) {
                             placeholder="Village"
                             variant='outlined'
                             label="Village"
-                            onChange={(e)=> {
+                            onChange={(e) => {
                                 let villageValue = e.target.value
-                                setState((prevState)=> {
+                                setState((prevState) => {
                                     return {
                                         metaData: prevState.metaData,
-                                        addressDetails:{
+                                        addressDetails: {
                                             ...prevState.addressDetails,
                                             village: villageValue
                                         },
-                                        amountChargeDetail:prevState.amountChargeDetail,
-                                        contactDetail:prevState.contactDetail
+                                        amountChargeDetail: prevState.amountChargeDetail,
+                                        contactDetail: prevState.contactDetail
                                     }
                                 })
                             }}
@@ -195,14 +206,14 @@ function Tractor(props) {
                             placeholder="Email"
                             variant='outlined'
                             label="Email"
-                            onChange={(e)=> {
+                            onChange={(e) => {
                                 let emailValue = e.target.value
-                                setState((prevState)=> {
+                                setState((prevState) => {
                                     return {
                                         metaData: prevState.metaData,
-                                        addressDetails:prevState.addressDetails,
-                                        amountChargeDetail:prevState.amountChargeDetail,
-                                        contactDetail:{
+                                        addressDetails: prevState.addressDetails,
+                                        amountChargeDetail: prevState.amountChargeDetail,
+                                        contactDetail: {
                                             ...prevState.contactDetail,
                                             email: emailValue
                                         }
@@ -216,14 +227,14 @@ function Tractor(props) {
                             placeholder="Contact Number"
                             variant='outlined'
                             label="Contact Number"
-                            onChange={(e)=> {
+                            onChange={(e) => {
                                 let contactNumber = e.target.value
-                                setState((prevState)=> {
+                                setState((prevState) => {
                                     return {
                                         metaData: prevState.metaData,
-                                        addressDetails:prevState.addressDetails,
-                                        amountChargeDetail:prevState.amountChargeDetail,
-                                        contactDetail:{
+                                        addressDetails: prevState.addressDetails,
+                                        amountChargeDetail: prevState.amountChargeDetail,
+                                        contactDetail: {
                                             ...prevState.contactDetail,
                                             contact: contactNumber
                                         }
@@ -245,20 +256,20 @@ function Tractor(props) {
                                     placeholder={item}
                                     variant='outlined'
                                     label={item}
-                                    onChange={(e)=> {
-                                        let inputValue =  e.target.value                                           
-                                        if(state.currentAmountInput != item){
-                                            setState((prevState)=> {
+                                    onChange={(e) => {
+                                        let inputValue = e.target.value
+                                        if (state.currentAmountInput != item) {
+                                            setState((prevState) => {
                                                 return {
                                                     metaData: prevState.metaData,
-                                                    addressDetails:prevState.addressDetails,
-                                                    amountChargeDetail:[...prevState.amountChargeDetail,{chargeAmount:[item,inputValue]}],
+                                                    addressDetails: prevState.addressDetails,
+                                                    amountChargeDetail: [...prevState.amountChargeDetail, { chargeAmount: [item, inputValue] }],
                                                     contactDetail: prevState.contactDetail,
                                                     currentAmountInput: item
                                                 }
                                             })
-                                        }else{
-                                            let updateExistingData = state.amountChargeDetail.map((i)=> {
+                                        } else {
+                                            let updateExistingData = state.amountChargeDetail.map((i) => {
                                                 console.log(i)
                                             })
                                             //console.log("===>",updateExistingData)
@@ -278,6 +289,55 @@ function Tractor(props) {
                         ))
                     }
                 </div>
+                <Card className="col-md-6 col-sm-12 col-lg-4">
+                    <Card.Header>
+                        <Card.Title>Upload Photo's</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                        <PhotoUploader
+                            title={"Selecte Photo's"}
+                            photoAccept={"Jpg/png photo's are accept"}
+                            onSelect={(e) => {
+                                if (Array.isArray(e) && e.length > 0) {
+                                    let images = []
+                                    let uploadCount = 0
+                                    let rejectCount = 0
+                                    e.map((item) => {
+                                        let fileSize = 30;
+                                        if (item.size > fileSize * 1024) {
+                                            rejectCount++
+                                        } else {
+                                            let reader = new FileReader()
+                                            reader.readAsDataURL(item)
+                                            reader.onload = () => {
+                                                images.push({ src: reader.result })
+                                            }
+                                            uploadCount++;
+                                        }
+                                    })
+                                    props.SetGlobalNotification({ status: "info", message: `${uploadCount} image upload and ${rejectCount} images are rejected` })
+                                    setState({ ...state, images: images })
+                                }
+                            }}
+                            allowClick={true}
+                            allowDrag={false}
+                            multiple={true}
+                        />
+                    </Card.Body>
+                    <Card.Footer className="w-100">
+                        {
+                            Array.isArray(state.images) && state.images.length > 0 && (
+                                <Card.Link className="col-md-6 col-lg-4 d-flex flex-row gap-2 overflow-auto w-100">
+                                    {
+                                        state.images.map((item, index) => (
+                                            <Card.Img alt={index} src={item.src} className="border border-red" />
+                                        ))
+                                    }
+                                </Card.Link>
+                            )
+                        }
+                    </Card.Footer>
+                </Card>
                 <Button variant='contained' onClick={handleSubmit}>
                     Submit
                 </Button>
@@ -298,5 +358,8 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps, {
-    handePostMetaData
+    handePostMetaData,
+    SetGlobalNotification,
+    uploadImage,
+    deleteImage
 })(Tractor)

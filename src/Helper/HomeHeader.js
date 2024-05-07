@@ -104,147 +104,36 @@ class RoomCard extends React.Component {
     }
 
     render() {
+        let images = this.props.metaData.images
         console.log(this.props)
         return (
-            <div className="col-md-12">
-                <ul className="cards">
-                    <li>
-                        <div href="" className="card">
-                            <img src={this.state.roomImgSrc} className="card__image" alt="" />
-                            <div className="card__overlay">
-                                <div className="card__header">
-                                    <svg className="card__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>
-                                    <img className="card__thumb" src="https://i.imgur.com/7D7I6dI.png" alt="" />
-                                    <div className="card__header-text">
-                                        <h3 className="card__title">Jessica Parker</h3>
-                                        <span className="card__status">1 hour ago</span>
-                                    </div>
-                                    <div className="card__header-button">
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("backward")}>
-                                            <KeyboardDoubleArrowLeft />
-                                        </IconButton>
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("forward")}>
-                                            <KeyboardDoubleArrowRight />
-                                        </IconButton>
-                                    </div>
-                                </div>
-                                <div className="card__description">
-                                    <span>1BHK Independent House </span>,
-                                    <span>Jonai,Murkongselec,Dhemaji</span>
-                                </div>
+            <li>
+                <div href="" className="card">
+                    <img src={Array.isArray(images) && images.length > 0 ? images[0].src : this.state.roomImgSrc} className="card__image" alt="" />
+                    <div className="card__overlay">
+                        <div className="card__header">
+                            <svg className="card__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>
+                            <img className="card__thumb" src="https://i.imgur.com/7D7I6dI.png" alt="" />
+                            <div className="card__header-text">
+                                <h3 className="card__title">Jessica Parker</h3>
+                                <span className="card__status">1 hour ago</span>
+                            </div>
+                            <div className="card__header-button">
+                                <IconButton onClick={() => this.handleImgForwardBackward("backward")}>
+                                    <KeyboardDoubleArrowLeft />
+                                </IconButton>
+                                <IconButton onClick={() => this.handleImgForwardBackward("forward")}>
+                                    <KeyboardDoubleArrowRight />
+                                </IconButton>
                             </div>
                         </div>
-                    </li>
-                    <li>
-                        <div href="" className="card">
-                            <img src={this.state.roomImgSrc} className="card__image" alt="" />
-                            <div className="card__overlay">
-                                <div className="card__header">
-                                    <svg className="card__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>
-                                    <img className="card__thumb" src="https://i.imgur.com/7D7I6dI.png" alt="" />
-                                    <div className="card__header-text">
-                                        <h3 className="card__title">Jessica Parker</h3>
-                                        <span className="card__status">1 hour ago</span>
-                                    </div>
-                                    <div className="card__header-button">
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("backward")}>
-                                            <KeyboardDoubleArrowLeft />
-                                        </IconButton>
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("forward")}>
-                                            <KeyboardDoubleArrowRight />
-                                        </IconButton>
-                                    </div>
-                                </div>
-                                <div className="card__description">
-                                    <span>1BHK Independent House </span>,
-                                    <span>Jonai,Murkongselec,Dhemaji</span>
-                                </div>
-                            </div>
+                        <div className="card__description">
+                            <span>1BHK Independent House </span>,
+                            <span>Jonai,Murkongselec,Dhemaji</span>
                         </div>
-                    </li>
-                    <li>
-                        <div href="" className="card">
-                            <img src={this.state.roomImgSrc} className="card__image" alt="" />
-                            <div className="card__overlay">
-                                <div className="card__header">
-                                    <svg className="card__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>
-                                    <img className="card__thumb" src="https://i.imgur.com/7D7I6dI.png" alt="" />
-                                    <div className="card__header-text">
-                                        <h3 className="card__title">Jessica Parker</h3>
-                                        <span className="card__status">1 hour ago</span>
-                                    </div>
-                                    <div className="card__header-button">
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("backward")}>
-                                            <KeyboardDoubleArrowLeft />
-                                        </IconButton>
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("forward")}>
-                                            <KeyboardDoubleArrowRight />
-                                        </IconButton>
-                                    </div>
-                                </div>
-                                <div className="card__description">
-                                    <span>1BHK Independent House </span>,
-                                    <span>Jonai,Murkongselec,Dhemaji</span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div href="" className="card">
-                            <img src={this.state.roomImgSrc} className="card__image" alt="" />
-                            <div className="card__overlay">
-                                <div className="card__header">
-                                    <svg className="card__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>
-                                    <img className="card__thumb" src="https://i.imgur.com/7D7I6dI.png" alt="" />
-                                    <div className="card__header-text">
-                                        <h3 className="card__title">Jessica Parker</h3>
-                                        <span className="card__status">1 hour ago</span>
-                                    </div>
-                                    <div className="card__header-button">
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("backward")}>
-                                            <KeyboardDoubleArrowLeft />
-                                        </IconButton>
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("forward")}>
-                                            <KeyboardDoubleArrowRight />
-                                        </IconButton>
-                                    </div>
-                                </div>
-                                <div className="card__description">
-                                    <span>1BHK Independent House </span>,
-                                    <span>Jonai,Murkongselec,Dhemaji</span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div href="" className="card">
-                            <img src={this.state.roomImgSrc} className="card__image" alt="" />
-                            <div className="card__overlay">
-                                <div className="card__header">
-                                    <svg className="card__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>
-                                    <img className="card__thumb" src="https://i.imgur.com/7D7I6dI.png" alt="" />
-                                    <div className="card__header-text">
-                                        <h3 className="card__title">Jessica Parker</h3>
-                                        <span className="card__status">1 hour ago</span>
-                                    </div>
-                                    <div className="card__header-button">
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("backward")}>
-                                            <KeyboardDoubleArrowLeft />
-                                        </IconButton>
-                                        <IconButton onClick={()=> this.handleImgForwardBackward("forward")}>
-                                            <KeyboardDoubleArrowRight />
-                                        </IconButton>
-                                    </div>
-                                </div>
-                                <div className="card__description">
-                                    <span>1BHK Independent House </span>,
-                                    <span>Jonai,Murkongselec,Dhemaji</span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+                    </div>
+                </div>
+            </li>
         )
     }
 }
