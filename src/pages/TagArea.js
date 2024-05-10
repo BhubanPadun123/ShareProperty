@@ -5,6 +5,7 @@ import Room from "./serviceComponents/Room/index";
 import HospitalService from "./serviceComponents/HospitalService";
 import Labour from "./serviceComponents/Labour";
 import Tractor from "./serviceComponents/Tractor/index"
+import News from "./serviceComponents/News";
 
 
 
@@ -36,6 +37,12 @@ class TagArea extends React.Component {
         } else if(this.state.metaData.serviceType === serviceList[2]){
             return(
                 <Tractor 
+                  metaData={this.state.metaData}
+                />
+            )
+        }else if(this.state.metaData.serviceType === "News"){
+            return(
+                <News 
                   metaData={this.state.metaData}
                 />
             )

@@ -12,8 +12,10 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useSelector,useDispatch } from 'react-redux';
-import { UserRegisterAction } from '../Redux/actions/UserAction';
+import { UserRegisterAction, UserLoginAction } from '../Redux/actions/UserAction';
+import { HourglassLoader } from "../Helper/Loader"
+import { connect } from "react-redux"
+import {useNavigate} from "react-router-dom"
 
 function Copyright(props) {
   return (
@@ -32,11 +34,40 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
-  const dispatch = useDispatch()
+function SignUp(props) {
+  const naviate = useNavigate()
+  const [state, setState] = React.useState({
+    status: "",
+    openVerification: false,
+    userData: {
+      email: "",
+      password: ""
+    },
+    isCkeckRememberMe:false
+  })
+
+  React.useState(() => {
+    const fetchLocalData = async () => {
+      const email = localStorage.getItem("email")
+      const password = localStorage.getItem("password")
+
+      if (email && password) {
+        let userData = {
+          email: email,
+          password: password,
+        };
+        await props.UserLoginAction(userData)
+
+        if(props.status === "success"){
+          naviate("/")
+        }
+      }
+    }
+    fetchLocalData()
+  }, [])
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let userData = {
@@ -46,8 +77,16 @@ export default function SignUp() {
       cpassword: data.get('cpassword')
     }
 
-    dispatch(UserRegisterAction(userData))
+    await props.UserRegisterAction(userData)
+    if (props.status === "success") {
+      if(state.isCkeckRememberMe){
+        localStorage.setItem("userEmail", data.get('email'))
+        localStorage.setItem("password", data.get("password"))
+      }
+      setState({ ...state, status: true, openVerification: true })
+    }
   };
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -118,12 +157,12 @@ export default function SignUp() {
                   name="cpassword"
                   label="Confirm Password"
                   type="text"
-                  id="cpassword"                  
+                  id="cpassword"
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  control={<Checkbox value="allowExtraEmails" color="primary" checked={state.isCkeckRememberMe} onChange={()=> setState({...state,isCkeckRememberMe:!state.isCkeckRememberMe})} />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
@@ -147,6 +186,34 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
+      {
+        props.status === "started" && (
+          <Container sx={{
+            position: 'absolute',
+            top: 0,
+            zIndex: 10,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%"
+          }}>
+            <HourglassLoader />
+          </Container>
+        )
+      }
     </ThemeProvider>
   );
 }
+
+const mapStateToProps = (state) => {
+
+  return {
+    status: state.userSignup.status
+  }
+}
+
+export default connect(mapStateToProps, {
+  UserRegisterAction,
+  UserLoginAction
+})(SignUp)

@@ -9,7 +9,7 @@ const initialState = {
 export class UserReducer {
     
 
-    UserSignUpReducer=async(state=initialState,action)=> {
+    UserSignUpReducer=(state=initialState,action)=> {
         switch(action.type){
             case actionTypes.USER_RESGISTER_STATUS:
                 state = {

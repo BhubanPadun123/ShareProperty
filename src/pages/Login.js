@@ -11,10 +11,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {LoginSharp} from "@mui/icons-material"
+import { LoginSharp } from "@mui/icons-material"
 import { PasswordResetAlert } from '../Helper/AlertModel';
-import { useSelector, useDispatch} from 'react-redux';
 import { UserLoginAction } from '../Redux/actions/UserAction';
+import { connect } from "react-redux"
+import { HourglassLoader } from "../Helper/Loader"
+import { useNavigate } from "react-router-dom"
 
 function Copyright(props) {
     return (
@@ -29,24 +31,95 @@ function Copyright(props) {
     );
 }
 
+export const OTPVerification=(props)=> {
+
+    const [state,setState] = React.useState({
+        otp:""
+    })
+
+    return(
+        <div style={{
+            padding:"10px",
+            opacity:10,
+            display:"flex",
+            flexDirection:"column",
+            gap:"20px",
+            
+        }}>
+            <TextField 
+               variant='outlined'
+               placeholder='Enter OTP'
+               type='number'
+               onChange={(e)=> setState({...state,otp:e.target.value})}
+            />
+            <Button variant='contained' onClick={()=> props.handleVerify(state.otp)}>
+                Submit
+            </Button>
+            <Button variant='contained' onClick={()=> props.onCancel()}>
+                Calcel
+            </Button>
+        </div>
+    )
+}
+
+
+
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
-export default function Login() {
-    const dispatch = useDispatch()
-
-    const [state,setState] = React.useState({
-        resetPassword: false
+function Login(props) {
+    const navigate = useNavigate()
+    const [state, setState] = React.useState({
+        resetPassword: false,
+        rememberMe: false,
+        openUserVerification: false
     })
-    const handleSubmit = (event) => {
+
+    React.useEffect(() => {
+        const fetchLocalData = async () => {
+            const email = localStorage.getItem("userEmail")
+            const password = localStorage.getItem("email")
+
+            if (email && password) {
+                const userData = {
+                    email: email,
+                    password: password
+                }
+
+                await props.UserLoginAction(userData)
+                if (props.status === "success") {
+                    if (props.loginResponse.info.verify) {
+                        navigate('/')
+                    } else {
+                        setState({ ...state, openUserVerification: true })
+                        alert("User Verification pendding")
+                    }
+                }
+            }
+        }
+    }, [])
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         let userData = {
             email: data.get('email'),
             password: data.get('password'),
         };
-        dispatch(UserLoginAction(userData))
+        await props.UserLoginAction(userData)
+        if (state.rememberMe) {
+            localStorage.setItem("userEmail", data.get('email'))
+            localStorage.setItem("password", data.get('password'))
+        }
+        if (props.status === "success") {
+            if (props.loginResponse.info.verify ) {
+                navigate('/')
+            }
+            else {
+                setState({ ...state, openUserVerification: true })
+                alert("User Verification pendding")
+            }
+        }
     };
 
     return (
@@ -92,7 +165,7 @@ export default function Login() {
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary" />}
+                                    control={<Checkbox value="allowExtraEmails" color="primary" checked={state.rememberMe} onChange={() => setState({ ...state, rememberMe: !state.rememberMe })} />}
                                     label="Remember me?"
                                 />
                             </Grid>
@@ -101,13 +174,13 @@ export default function Login() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2,width:'max-content' }}
+                            sx={{ mt: 3, mb: 2, width: 'max-content' }}
                         >
                             Sign Up
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2" onClick={()=>{ setState({...state,resetPassword:!state.resetPassword})}}>
+                                <Link href="#" variant="body2" onClick={() => { setState({ ...state, resetPassword: !state.resetPassword }) }}>
                                     Forget Password?
                                 </Link>
                             </Grid>
@@ -121,6 +194,52 @@ export default function Login() {
                     )
                 }
             </Container>
+            {
+                props.status === "started" && (
+                    <Container sx={{
+                        position: "absolute",
+                        height: "100%",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <HourglassLoader />
+                    </Container>
+                )
+            }
+            {
+                state.openUserVerification && (
+                    <Container sx={{
+                        position: "absolute",
+                        height: "100%",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor:'GrayText',
+                        zIndex:10,
+                        opacity:0.98
+                    }}>
+                        <OTPVerification 
+                            handleVerify = {()=>{}}
+                            onCancel={()=> {setState({...state,openUserVerification:false})}}
+                        />
+                    </Container>
+                )
+            }
         </ThemeProvider>
     );
 }
+
+const mapStateToProps = (state) => {
+    console.log("state==>", state.userLogin.response)
+    return {
+        status: state.userLogin.status,
+        loginResponse: state.userLogin.response
+    }
+}
+
+export default connect(mapStateToProps, {
+    UserLoginAction
+})(Login)

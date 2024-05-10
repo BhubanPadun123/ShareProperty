@@ -16,11 +16,14 @@ import { SetGlobalNotification } from "../Redux/actions/NotificationAction.js";
 import PopOver from "../Helper/PopOver.js";
 import { serviceList } from "../utils/data.js";
 import "../Helper/styles/HomeStyles.css"
+import {useNavigate} from "react-router-dom"
 
 
 const HandleGetAllService = new GlobalAction().HandleGetAllService
 
 const Home = (props) => {
+
+  const navigate = useNavigate()
 
   const [state, setState] = React.useState({
     serviceList: [],
@@ -47,6 +50,13 @@ const Home = (props) => {
 
   const handleFilter = (data) => {
     console.log(data, state.serviceList)
+  }
+  const handleItemView=(data)=> {
+    setState({...state,showLoading: true})
+    setTimeout(()=>{
+      setState({...state,showLoading:false})
+      navigate('/view-room',{state:{data}})
+    },2000)
   }
 
   return (
@@ -96,6 +106,7 @@ const Home = (props) => {
                     <RoomCard
                       key={index}
                       metaData={item}
+                      handleItemView={handleItemView}
                     />
                   ))
                 }
@@ -104,7 +115,7 @@ const Home = (props) => {
           )
         }
         {
-          props.status === "started" && (
+          (props.status === "started" || state.showLoading ) && (
             <div className="col-md-12" style={{
               position: "absolute",
               top: 0,
@@ -114,12 +125,14 @@ const Home = (props) => {
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "GrayText",
-              opacity: 0.8
+              opacity: 0.8,
+              zIndex:20
             }}>
               <DNALoader />
             </div>
           )
         }
+        
       </Paper>
     </Box>
   );

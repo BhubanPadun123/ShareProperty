@@ -21,6 +21,7 @@ import pic_1 from "../image/school_1.jpg"
 import PropTypes from "prop-types"
 import { serviceListData } from "../utils/data";
 import "./styles/HomeStyles.css"
+import { Button } from "react-bootstrap";
 
 
 class HomeHeader extends React.Component {
@@ -130,6 +131,9 @@ class RoomCard extends React.Component {
                         <div className="card__description">
                             <span>1BHK Independent House </span>,
                             <span>Jonai,Murkongselec,Dhemaji</span>
+                            <Button className="mt-2" variant='info' onClick={()=> {
+                                this.props.handleItemView(this.props.metaData)
+                            }}>View</Button>
                         </div>
                     </div>
                 </div>
@@ -139,7 +143,8 @@ class RoomCard extends React.Component {
 }
 RoomCard.propTypes = {
     key: PropTypes.number,
-    metaData: PropTypes.object
+    metaData: PropTypes.object,
+    handleItemView: PropTypes.func
 }
 
 HomeHeader.propTypes = {

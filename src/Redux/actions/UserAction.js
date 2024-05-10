@@ -9,32 +9,34 @@ export const UserRegisterAction = (props) => {
         try {
             if (props.password !== props.cpassword) {
                 alert("password misMatch")
+                dispatch({
+                    type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                    payload:{status:"warning",message:"password MisMatch!!!"}
+                })
             }
             dispatch({
                 type: actionTypes.USER_RESGISTER_STATUS,
                 payload: {}
             })
-            console.log(config)
-            const postData = await axios.post(`${config.baseUrl}/signup`, { props })
-            if (postData) {
+            axios.post(`${config.baseUrl}/signup`, { props }).then((response)=> {
                 dispatch({
                     type: actionTypes.USER_RESGISTER_RESPONSE,
-                    payload: postData.data
+                    payload: response.data
                 })
                 dispatch({
                     type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
                     payload:{status:"success",message:"User Register successfull."}
                 })
-            } else {
+            }).catch((error)=> {
                 dispatch({
                     type: actionTypes.USER_RESGISTER_ERROR,
-                    payload: "error"
+                    payload: error
                 })
                 dispatch({
-                    type: actionTypes.RESET_GLOBAL_NOTIFICATION,
+                    type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
                     payload:{status:"info",message:"Error while API call"}
                 })
-            }
+            })
         } catch (error) {
             dispatch({
                 type: actionTypes.USER_RESGISTER_ERROR,
@@ -57,18 +59,25 @@ export const UserLoginAction=(props)=> {
                 payload:"started"
             })
 
-            const user = (await axios.post(`${config.baseUrl}/signin`,{props})).data
-
-            if(user){
+            axios.post(`${config.baseUrl}/signin`,{props}).then((response)=> {
                 dispatch({
                     type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
                     payload:{status:"success",message:"User Login Successfull"}
                 })
                 dispatch({
                     type: actionTypes.USER_LOGIN_RESPONSE,
-                    payload:"user Login successfull"
+                    payload:response.data
                 })
-            }
+            }).catch((error)=> {
+                dispatch({
+                    type: actionTypes.USER_LOGIN_ERROR,
+                    payload:error
+                })
+                dispatch({
+                    type:actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                    payload:{status:"error",message:"Error while Login"}
+                })
+            })
         } catch (error) {
             dispatch({
                 type: actionTypes.SHOW_GLOBAL_NOTIFICATION,

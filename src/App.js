@@ -13,6 +13,7 @@ import JunctionPoint from "./pages/JunctionPoint";
 import ErrorPage from "./pages/ErrorPage";
 import GlobalNotification from "./Helper/GlobalNotification";
 import UpdateProperty from "./Helper/UpdateProperty";
+import MainItemViewCard from "./Helper/CardList/mainItemCard/index"
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/room-service" element={<PostPropert />} />
           <Route path="/post" element={<JunctionPoint />} />
           <Route path="/update" element={<UpdateProperty />} />
+          <Route path="/view-room" element={<MainItemViewCard />} />
           <Route path="*" element={<ErrorPage/>} />
         </Routes>
       </main>

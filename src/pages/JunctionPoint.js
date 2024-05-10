@@ -41,7 +41,7 @@ function HandleRentConfi(props) {
     } = props
     const [services, setServices] = React.useState(availableService);
     const [condiateName, setName] = React.useState(props.condiateName)
-    const [email,setEmail] = React.useState(props.email)
+    const [email, setEmail] = React.useState(props.email)
 
     const handleChange = (event) => {
         const {
@@ -54,26 +54,32 @@ function HandleRentConfi(props) {
     return (
         <Container component={Paper} sx={{ padding: "4px", display: "flex", flexDirection: 'column', gap: "10px", justifyContent: 'center', alignItems: "center" }}>
             <img src={label_icon} style={{ width: "50%", borderRadius: "20px" }} />
-            <Grid item sx={12} md={6}>
-                <TextField
-                    placeholder="Enter Your Name"
-                    value={condiateName}
-                    onChange={(e) => {
-                        handleNameChange(e.target.value)
-                        setName(e.target.value)
-                    }}
-                />
-            </Grid>
-            <Grid item sx={12} md={6}>
-                <TextField
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => {
-                        handleEmailChange(e)
-                        setEmail(e.target.value)
-                    }}
-                />
-            </Grid>
+            {
+                label !== "News" && (
+                    <React.Fragment>
+                        <Grid item sx={12} md={6}>
+                            <TextField
+                                placeholder="Enter Your Name"
+                                value={condiateName}
+                                onChange={(e) => {
+                                    handleNameChange(e.target.value)
+                                    setName(e.target.value)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item sx={12} md={6}>
+                            <TextField
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => {
+                                    handleEmailChange(e)
+                                    setEmail(e.target.value)
+                                }}
+                            />
+                        </Grid>
+                    </React.Fragment>
+                )
+            }
             {
                 service_menu.length > 0 && (
                     <Grid item sx={12} md={6} display={"flex"} flexDirection={'column'} gap={"10px"} justifyContent={'center'} alignItems={"center"}>
@@ -135,7 +141,7 @@ class JunctionPoint extends React.Component {
             condiateName: "",
             isReady: false,
             metaData: {},
-            email:""
+            email: ""
         }
     }
 
@@ -153,10 +159,13 @@ class JunctionPoint extends React.Component {
         metaData.serviceList = this.state.availableService
         metaData.serviceType = this.state.selectedOption ? this.state.selectedOption.label : serviceList[0]
         metaData.email = this.state.email
-        if (this.state.condiateName.length == 0) {
+        if (this.state.condiateName.length == 0 && this.state.selectedOption.label !== "News") {
             this.props.SetGlobalNotification({ status: "warning", message: "Fill's are mandatory!!" })
         }
         if (this.state.condiateName.length > 0 && this.state.email) {
+            this.setState({ isReady: true, metaData: metaData })
+        }
+        if(this.state.selectedOption.label === "News"){
             this.setState({ isReady: true, metaData: metaData })
         }
     }
@@ -227,7 +236,7 @@ class JunctionPoint extends React.Component {
                                                 availableService={this.state.availableService}
                                                 handleNameChange={(e) => this.setState({ condiateName: e })}
                                                 condiateName={this.state.condiateName}
-                                                handleEmailChange = {(e)=> {this.setState({email:e.target.value})}}
+                                                handleEmailChange={(e) => { this.setState({ email: e.target.value }) }}
                                                 email={this.state.email}
                                             /> :
                                             <HandleRentConfi
@@ -238,7 +247,7 @@ class JunctionPoint extends React.Component {
                                                 availableService={this.state.availableService}
                                                 handleNameChange={(e) => this.setState({ condiateName: e })}
                                                 condiateName={this.state.condiateName}
-                                                handleEmailChange = {(e)=> {this.setState({email:e.target.value})}}
+                                                handleEmailChange={(e) => { this.setState({ email: e.target.value }) }}
                                                 email={this.state.email}
                                             />
                                     }
