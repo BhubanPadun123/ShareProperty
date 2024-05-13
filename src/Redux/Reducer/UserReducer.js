@@ -96,4 +96,61 @@ export class UserReducer {
 
         return state
     }
+
+    VerifyUser=(state=initialState,action)=> {
+        switch(action.type){
+            case actionTypes.VERIFY_USER_STATUS:
+                state= {
+                    status:"started",
+                    response:[],
+                    error:""
+                }
+                break;
+            case actionTypes.VERIFY_USER_RESPONSE:
+                state = {
+                    status: "success",
+                    response: action.payload,
+                    error:""
+                }
+                break;
+            case actionTypes.VERIFY_USER_ERROR:
+                state = {
+                    status: "failed",
+                    response:[],
+                    error: action.payload
+                }
+                break;
+            default:
+                return state;
+        }
+        return state
+    }
+    SendOTP=(state=initialState,action)=> {
+        switch(action.type){
+            case actionTypes.SEND_OTP_STATUS:
+                state= {
+                    status:"started",
+                    response:[],
+                    error:""
+                }
+                break;
+            case actionTypes.SEND_OTP_RESPONSE:
+                state = {
+                    status: "success",
+                    response: action.payload,
+                    error:""
+                }
+                break;
+            case actionTypes.SEND_OTP_ERROR:
+                state = {
+                    status: "failed",
+                    response:[],
+                    error: action.payload
+                }
+                break;
+            default:
+                return state;
+        }
+        return state
+    }
 }

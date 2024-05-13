@@ -18,7 +18,9 @@ const RootReducer = combineReducers({
     getMetadata: RoomReducer.getMetadataReducer,
     getAllService: new GlobalReducer().AllServiceReducer,
     imageReducer: new GlobalReducer().UploadImageReducer,
-    imageDeleteReducer: new GlobalReducer().DeleteImageReducer
+    imageDeleteReducer: new GlobalReducer().DeleteImageReducer,
+    verifyUser: userRelatedReducer.VerifyUser,
+    UserOTP: userRelatedReducer.SendOTP
 })
 
 export default RootReducer

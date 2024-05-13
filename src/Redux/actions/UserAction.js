@@ -121,6 +121,63 @@ export const ForgetPasswordAction=(props)=>{
         }
     }
 }
+export const VerifyUserAction=(props)=>{
+    return async(dispatch)=> {
+        dispatch({
+            type: actionTypes.VERIFY_USER_STATUS,
+            payload:{}
+        })
+
+        await axios.post(`${config.baseUrl}/verifyotp`,{props}).then((response)=> {
+            dispatch({
+                type: actionTypes.VERIFY_USER_RESPONSE,
+                payload:response.data
+            })
+            dispatch({
+                type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                payload:{status:"success",message:"Verify Successfully!!"}
+            })
+        }).catch((error)=> {
+            dispatch({
+                type: actionTypes.VERIFY_USER_ERROR,
+                payload:error
+            })
+            dispatch({
+                type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                payload:{status:"error",message:"Something Went Wrong!!. Please Try Again."}
+            })
+        })
+    }
+}
+
+export const SendOTPAction=(props)=> {
+    return async(dispatch) => {
+        dispatch({
+            type: actionTypes.SEND_OTP_STATUS,
+            payload:{}
+        })
+
+        await axios.post(`${config.baseUrl}/resetverification`,{props}).then((response)=> {
+            dispatch({
+                type: actionTypes.SEND_OTP_RESPONSE,
+                payload: response.data
+            })
+            dispatch({
+                type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                payload:{status:"success",message:"OTP send to your register Email id."}
+            })
+        }).catch((error)=> {
+            dispatch({
+                type: actionTypes.SEND_OTP_ERROR,
+                payload: error
+            })
+            dispatch({
+                type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
+                payload:{status:"error",message:"Error while send OTP"}
+            })
+        })
+    }
+}
 
 
 

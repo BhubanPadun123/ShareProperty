@@ -13,7 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LoginSharp } from "@mui/icons-material"
 import { PasswordResetAlert } from '../Helper/AlertModel';
-import { UserLoginAction } from '../Redux/actions/UserAction';
+import { UserLoginAction, VerifyUserAction,SendOTPAction } from '../Redux/actions/UserAction';
 import { connect } from "react-redux"
 import { HourglassLoader } from "../Helper/Loader"
 import { useNavigate } from "react-router-dom"
@@ -31,31 +31,44 @@ function Copyright(props) {
     );
 }
 
-export const OTPVerification=(props)=> {
+export const OTPVerification = (props) => {
 
-    const [state,setState] = React.useState({
-        otp:""
+    const [state, setState] = React.useState({
+        otp: ""
     })
-
-    return(
+    return (
         <div style={{
-            padding:"10px",
-            opacity:10,
-            display:"flex",
-            flexDirection:"column",
-            gap:"20px",
-            
+            padding: "10px",
+            opacity: 10,
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+
         }}>
-            <TextField 
-               variant='outlined'
-               placeholder='Enter OTP'
-               type='number'
-               onChange={(e)=> setState({...state,otp:e.target.value})}
+            <TextField
+                variant='outlined'
+                placeholder='Enter OTP'
+                type='number'
+                onChange={(e) => setState({ ...state, otp: e.target.value })}
+                error={props.status === "failed"}
             />
-            <Button variant='contained' onClick={()=> props.handleVerify(state.otp)}>
+            {
+                props.status === "failed" && props.erroData.status === "expired" && (
+                    <div>
+                        <span style={{ padding: "10px", color: "red", fontFamily: "Lato" }}>OTP Expired</span>
+                        <Button variant='contained' onClick={()=> {
+                            setState({...state,otp:""})
+                            props.sendOTP({email: props.email})
+                        }}>
+                            Send New OPT
+                        </Button>
+                    </div>
+                )
+            }
+            <Button variant='contained' onClick={() => props.handleVerify(state.otp)}>
                 Submit
             </Button>
-            <Button variant='contained' onClick={()=> props.onCancel()}>
+            <Button variant='contained' onClick={() => props.onCancel()}>
                 Calcel
             </Button>
         </div>
@@ -73,7 +86,9 @@ function Login(props) {
     const [state, setState] = React.useState({
         resetPassword: false,
         rememberMe: false,
-        openUserVerification: false
+        openUserVerification: false,
+        email: "",
+        showLoader: false
     })
 
     React.useEffect(() => {
@@ -99,6 +114,22 @@ function Login(props) {
             }
         }
     }, [])
+    React.useEffect(()=>{
+        const handleRoute=async()=> {
+            if(props.loginResponse.hasOwnProperty("info")){
+                if(props.loginResponse.info.verify){
+                    setState({...state,showLoader:true})
+
+                    setTimeout(()=>{
+                        setState({...state,showLoader:false})
+                        navigate("/")
+                    },3000)
+                }
+            }
+        }
+        handleRoute()
+    },[props.loginResponse])
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -106,13 +137,14 @@ function Login(props) {
             email: data.get('email'),
             password: data.get('password'),
         };
+        setState({ ...state, email: userData.email })
         await props.UserLoginAction(userData)
         if (state.rememberMe) {
             localStorage.setItem("userEmail", data.get('email'))
             localStorage.setItem("password", data.get('password'))
         }
         if (props.status === "success") {
-            if (props.loginResponse.info.verify ) {
+            if (props.loginResponse.info.verify) {
                 navigate('/')
             }
             else {
@@ -121,6 +153,8 @@ function Login(props) {
             }
         }
     };
+
+    console.log(props.userVerify)
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -195,7 +229,7 @@ function Login(props) {
                 }
             </Container>
             {
-                props.status === "started" && (
+                (props.status === "started" || state.showLoader) && (
                     <Container sx={{
                         position: "absolute",
                         height: "100%",
@@ -217,13 +251,28 @@ function Login(props) {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        backgroundColor:'GrayText',
-                        zIndex:10,
-                        opacity:0.98
+                        backgroundColor: 'GrayText',
+                        zIndex: 10,
+                        opacity: 0.98
                     }}>
-                        <OTPVerification 
-                            handleVerify = {()=>{}}
-                            onCancel={()=> {setState({...state,openUserVerification:false})}}
+                        <OTPVerification
+                            handleVerify={async (e) => {
+                                let data = {
+                                    email: state.email,
+                                    otp: e
+                                }
+                                await props.VerifyUserAction(data)  
+                                if(props.userVerify.hasOwnProperty('status')){
+                                    if(props.userVerify.status === "success"){
+                                        navigate("/")
+                                    }
+                                }                              
+                            }}
+                            onCancel={() => { setState({ ...state, openUserVerification: false }) }}
+                            status={props.userVerify.status && props.userVerify.status}
+                            erroData={props.userVerify.error && props.userVerify.error}
+                            sendOTP = {props.SendOTPAction}
+                            email = {state.email}
                         />
                     </Container>
                 )
@@ -233,13 +282,20 @@ function Login(props) {
 }
 
 const mapStateToProps = (state) => {
-    console.log("state==>", state.userLogin.response)
+    //console.log("state==>", state.verifyUser.error.response.data)
     return {
         status: state.userLogin.status,
-        loginResponse: state.userLogin.response
+        loginResponse: state.userLogin.response,
+        userVerify: {
+            status: state.verifyUser.status,
+            response: state.verifyUser.status === "success" ? state.verifyUser.response.info : [],
+            error: state.verifyUser.status === "failed" ? state.verifyUser.error.response.data : {}
+        }
     }
 }
 
 export default connect(mapStateToProps, {
-    UserLoginAction
+    UserLoginAction,
+    VerifyUserAction,
+    SendOTPAction
 })(Login)
