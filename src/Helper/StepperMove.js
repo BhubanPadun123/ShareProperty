@@ -22,13 +22,15 @@ class StepperMove extends React.Component {
         this.state = {
             activeStep: 0,
             skepped: new Set(),
-            steps: this.props.stepsList
+            steps: this.props.stepsList,
+            next: false
         }
     }
 
     handleNext = () => {
         this.setState({
             activeStep: this.state.activeStep + 1,
+            next: true
         })
     }
     handleBack = () => {
@@ -39,6 +41,10 @@ class StepperMove extends React.Component {
     }
 
     render() {
+        let fields_data = {}
+        if(this.state.activeStep === 0){
+            fields_data = this.props.candidateDetails
+        }
         return (
             <Grid component={Paper} sx={12} md={6} display={'flex'} flexDirection={'column'} gap={"8px"} justifyContent={'center'} bgcolor={"#c9c253"} alignItems={"center"}>
                 <Stepper activeStep={this.state.activeStep} orientation='vertical' >
@@ -70,7 +76,14 @@ class StepperMove extends React.Component {
                                 </StepLabel>
                                 <StepContent>
                                     {
-                                        <step.description />
+                                        <step.description 
+                                           updateValue={(e,type)=> {
+                                            this.props.handleNext(e,type)
+                                            this.setState({next: false})
+                                           }}
+                                           next={this.state.next}
+                                           fields_data={fields_data}
+                                        />
                                     }
                                     <Box sx={{ mb: 2 }}>
                                         <div>

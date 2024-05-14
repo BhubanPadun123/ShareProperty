@@ -26,7 +26,9 @@ class TagArea extends React.Component {
             )
         } else if(this.state.metaData.serviceType === serviceList[1]){
             return (
-                <HospitalService />
+                <HospitalService
+                  metaData={this.state.metaData}
+                />
             )
         }else if(this.state.metaData.serviceType === serviceList[3]){
             return(

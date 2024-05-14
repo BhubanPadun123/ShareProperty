@@ -29,11 +29,19 @@ class About extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            candidateDetails:{
+                fullName: this.props.fields_data.candidateName || this.props.fields_data.fullName ? this.props.fields_data.candidateName || this.props.fields_data.fullName : "",
+                email: this.props.fields_data.email ? this.props.fields_data.email : "",
+                contactNumber: this.props.fields_data.contactNumber ? this.props.fields_data.contactNumber : "",
+                DL_Number: this.props.fields_data.DL_Number ? this.props.fields_data.DL_Number : ""
+            }
         }
     }
 
     render() {
+        if(this.props.next){
+            this.props.updateValue(this.state.candidateDetails,"candidateDetails")
+        }
         return (
             <Container component={Paper}
                 sx={{
@@ -49,21 +57,57 @@ class About extends React.Component {
                 <Grid item sx={12} md={6}>
                     <TextField
                         placeholder="Full Name"
+                        value={this.state.candidateDetails.fullName}
+                        onChange={(e)=> {
+                            this.setState({candidateDetails:{
+                                fullName:e.target.value,
+                                email: this.state.candidateDetails.email,
+                                contactNumber: this.state.candidateDetails.contactNumber,
+                                DL_Number: this.state.candidateDetails.DL_Number
+                            }})
+                        }}
                     />
                 </Grid>
                 <Grid item sx={12} md={6}>
                     <TextField
                         placeholder="Email"
+                        value={this.state.candidateDetails.email}
+                        onChange={(e)=> {
+                            this.setState({candidateDetails:{
+                                fullName:this.state.candidateDetails.fullName,
+                                email: e.target.value,
+                                contactNumber: this.state.candidateDetails.contactNumber,
+                                DL_Number: this.state.candidateDetails.DL_Number
+                            }})
+                        }}
                     />
                 </Grid>
                 <Grid item sx={12} md={6}>
                     <TextField
                         placeholder="Contact Number"
+                        value={this.state.candidateDetails.contactNumber}
+                        onChange={(e)=> {
+                            this.setState({candidateDetails:{
+                                fullName:this.state.candidateDetails.fullName,
+                                email: this.state.candidateDetails.email,
+                                contactNumber: e.target.value,
+                                DL_Number: this.state.candidateDetails.DL_Number
+                            }})
+                        }}
                     />
                 </Grid>
                 <Grid item sx={12} md={6}>
                     <TextField
                         placeholder="DL Number"
+                        value={this.state.candidateDetails.DL_Number}
+                        onChange={(e)=> {
+                            this.setState({candidateDetails:{
+                                fullName:this.state.candidateDetails.fullName,
+                                email: this.state.candidateDetails.email,
+                                contactNumber: this.state.candidateDetails.contactNumber,
+                                DL_Number: e.target.value
+                            }})
+                        }}
                     />
                 </Grid>
             </Container>
@@ -71,13 +115,19 @@ class About extends React.Component {
     }
 }
 About.propTypes = {
-
+    updateValue: PropTypes.func,
+    next: PropTypes.bool,
+    fields_data: PropTypes.object
 }
 class ServiceTime extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedDays: []
+            selectedDays: [],
+            time:{
+                start:"",
+                end:""
+            }
         }
     }
     handleChange = (event) => {
@@ -143,6 +193,16 @@ class ServiceTime extends React.Component {
                         sx={{
                             width: "240px"
                         }}
+                        value={this.state.time.start}
+                        onChange={(e)=>{
+                            this.setState((prevState)=>({
+                                ...prevState,
+                                time:{
+                                    ...prevState.time,
+                                    start: e.target.value
+                                }
+                            }))
+                        }}
                     />
                 </Grid>
                 <Typography sx={{
@@ -164,6 +224,16 @@ class ServiceTime extends React.Component {
                         sx={{
                             width: "240px"
                         }}
+                        value={this.state.time.end}
+                        onChange={(e)=>{
+                            this.setState((prevState)=>({
+                                ...prevState,
+                                time:{
+                                    ...prevState.time,
+                                    end: e.target.value
+                                }
+                            }))
+                        }}
                     />
                 </Grid>
             </Container>
@@ -171,7 +241,9 @@ class ServiceTime extends React.Component {
     }
 }
 ServiceTime.propTypes = {
-
+    updateValue: PropTypes.func,
+    next: PropTypes.bool,
+    fields_data: PropTypes.object
 }
 
 class AboutVechicle extends React.Component {
@@ -368,12 +440,12 @@ const steps = [
         value: "name",
         description: ChargesType
     },
-    // {
-    //     label: "Charge Amount",
-    //     label_icon: Payment,
-    //     value: "name",
-    //     description: About
-    // },
+    {
+        label: "Charge Amount",
+        label_icon: Payment,
+        value: "name",
+        description: About
+    },
     // {
     //     label: "Agreement",
     //     label_icon: Handshake,
@@ -386,11 +458,71 @@ class HospitalService extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            metaData:{
+                address:"",
+                serviceType: this.props.metaData.serviceType ? this.props.metaData.serviceType : "",
+                ownerDetails:{
+                    candidateName: this.props.metaData.candidateName ? this.props.metaData.candidateName : ""
+                },
+                serviceDetails:{
+                    serviceList:this.props.metaData.serviceList ? this.props.metaData.serviceList : []
+                },
+                propertyDetails:""
+            },
+            email:this.props.metaData.email ? this.props.metaData.email : "",
+            images:[]
+        }
+    }
+    
+    handleNext=(value,type)=> {
+        console.log(value,type,"<===========")
+        switch(type){
+            case "candidateDetails":
+                this.setState((prevState)=> ({
+                    ...prevState,
+                    metaData:{
+                        ...prevState.metaData,
+                        ownerDetails: value
+                    }
+                }))
+                break;
+            case "addressDetails":
+                this.setState((prevState)=> ({
+                    ...prevState,
+                    metaData:{
+                        ...prevState.metaData,
+                        address: value
+                    }
+                }))
+                break;
+            case "serviceDetails":
+                this.setState((prevState)=> ({
+                    ...prevState,
+                    metaData:{
+                        ...prevState.metaData,
+                        serviceDetails: value
+                    }
+                }))                
+                break;
+            case "propertyDetails":
+                this.setState((prevState)=> ({
+                    ...prevState,
+                    metaData:{
+                        ...prevState.metaData,
+                        propertyDetails: value
+                    }
+                }))                
+                break;
+            case "images":                
+                this.setState({images:value});
+                break;
+            default:
+                return
         }
     }
 
     render() {
+        
         return (
             <Container component={Paper} sx={{
                 background:'#54544d',
@@ -399,6 +531,8 @@ class HospitalService extends React.Component {
             }}>
                 <StepperMove
                     stepsList={steps}
+                    handleNext={this.handleNext}
+                    candidateDetails={this.state.metaData.ownerDetails}
                 />
             </Container>
         )
