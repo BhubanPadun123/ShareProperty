@@ -17,6 +17,7 @@ import PopOver from "../Helper/PopOver.js";
 import { serviceList } from "../utils/data.js";
 import "../Helper/styles/HomeStyles.css"
 import {useNavigate} from "react-router-dom"
+import RoomItemCard from "./serviceComponents/Car/RoomItem.js";
 
 
 const HandleGetAllService = new GlobalAction().HandleGetAllService
@@ -97,6 +98,7 @@ const Home = (props) => {
             </div>
           }
         />
+        <RoomItemCard />
         {
           Array.isArray(state.serviceList) && state.serviceList.length > 0 && (
             <div className="col-md-12">
@@ -131,8 +133,7 @@ const Home = (props) => {
               <DNALoader />
             </div>
           )
-        }
-        
+        }        
       </Paper>
     </Box>
   );

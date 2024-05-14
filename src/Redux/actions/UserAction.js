@@ -34,7 +34,7 @@ export const UserRegisterAction = (props) => {
                 })
                 dispatch({
                     type: actionTypes.SHOW_GLOBAL_NOTIFICATION,
-                    payload:{status:"info",message:"Error while API call"}
+                    payload:{status:"info",message:error.response.data.info}
                 })
             })
         } catch (error) {

@@ -45,6 +45,9 @@ class StepperMove extends React.Component {
         if(this.state.activeStep === 0){
             fields_data = this.props.candidateDetails
         }
+        if(this.state.activeStep === 1){
+            fields_data = this.props.serviceDetails
+        }
         return (
             <Grid component={Paper} sx={12} md={6} display={'flex'} flexDirection={'column'} gap={"8px"} justifyContent={'center'} bgcolor={"#c9c253"} alignItems={"center"}>
                 <Stepper activeStep={this.state.activeStep} orientation='vertical' >

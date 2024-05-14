@@ -123,10 +123,10 @@ class ServiceTime extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedDays: [],
+            selectedDays: this.props.fields_data.serviceDays ? this.props.fields_data.serviceDays : [],
             time:{
-                start:"",
-                end:""
+                start: this.props.fields_data.time ? this.props.fields_data.time.start : "",
+                end: this.props.fields_data.time ? this.props.fields_data.time.end :  ""
             }
         }
     }
@@ -138,6 +138,13 @@ class ServiceTime extends React.Component {
     }
 
     render() {
+        if(this.props.next){
+            let serviceTime = {
+                serviceDays: this.state.selectedDays,
+                time: this.state.time
+            }
+            this.props.updateValue(serviceTime,"serviceDetails")
+        }
         return (
             <Container component={Paper}
                 sx={{
@@ -250,7 +257,9 @@ class AboutVechicle extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedVechile:""
+            selectedVechile:"",
+            v_name:"",
+            v_number:""
         }
     }
     handleChange = (event) => {
@@ -258,6 +267,15 @@ class AboutVechicle extends React.Component {
     }
 
     render() {
+        if(this.props.next){
+            let v_details = {
+                v_type : this.state.selectedVechile,
+                v_name: this.state.v_name,
+                v_number : this.state.v_number
+            }
+
+            this.props.updateValue(v_details,"propertyDetails")
+        }
         return (
             <Container component={Paper}
                 sx={{
@@ -293,6 +311,10 @@ class AboutVechicle extends React.Component {
                        variant={'outlined'}
                        focused
                        placeholder="Vechile Name"
+                       value={this.state.v_name}
+                       onChange={(e)=> {
+                        this.setState({v_name: e.target.value})
+                       }}
                     />
                 </Grid>
                 <Grid item sx={12} md={6}>
@@ -300,11 +322,20 @@ class AboutVechicle extends React.Component {
                        variant={'outlined'}
                        focused
                        placeholder="Vechile Number"
+                       value={this.state.v_number}
+                       onChange={(e)=> {
+                        this.setState({v_number:e.target.value})
+                       }}
                     />
                 </Grid>
             </Container>
         )
     }
+}
+AboutVechicle.propTypes = {
+    updateValue: PropTypes.func,
+    next: PropTypes.bool,
+    fields_data: PropTypes.object
 }
 
 class VechileCapacity extends React.Component {
@@ -533,6 +564,7 @@ class HospitalService extends React.Component {
                     stepsList={steps}
                     handleNext={this.handleNext}
                     candidateDetails={this.state.metaData.ownerDetails}
+                    serviceDetails={this.state.metaData.serviceDetails}
                 />
             </Container>
         )

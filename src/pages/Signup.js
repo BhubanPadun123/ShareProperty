@@ -16,6 +16,7 @@ import { UserRegisterAction, UserLoginAction } from '../Redux/actions/UserAction
 import { HourglassLoader } from "../Helper/Loader"
 import { connect } from "react-redux"
 import {useNavigate} from "react-router-dom"
+import { SetGlobalNotification } from '../Redux/actions/NotificationAction';
 
 function Copyright(props) {
   return (
@@ -43,7 +44,8 @@ function SignUp(props) {
       email: "",
       password: ""
     },
-    isCkeckRememberMe:false
+    isCkeckRememberMe:false,
+    showLoader: false
   })
 
   React.useState(() => {
@@ -65,6 +67,21 @@ function SignUp(props) {
     }
     fetchLocalData()
   }, [])
+  React.useEffect(()=>{
+    const fetchPostData = async()=>{
+      if(props.status === "failed"){
+        props.SetGlobalNotification({status:"error",message:props.message})
+      }
+      if(props.status === "success"){
+        setState({...state,showLoader:true})
+        setTimeout(()=>{
+          setState({...state,showLoader: false})
+          naviate("/")
+        },3000)
+      }
+    }
+    fetchPostData()
+  },[props.status,props.response])
 
 
   const handleSubmit = async (event) => {
@@ -187,7 +204,7 @@ function SignUp(props) {
         <Copyright sx={{ mt: 5 }} />
       </Container>
       {
-        props.status === "started" && (
+        (props.status === "started" || state.showLoader) && (
           <Container sx={{
             position: 'absolute',
             top: 0,
@@ -207,13 +224,16 @@ function SignUp(props) {
 }
 
 const mapStateToProps = (state) => {
-
+  console.log(state,"<--------- ")
   return {
-    status: state.userSignup.status
+    status: state.userSignup.status,
+    message:state.userSignup.status === "failed" ? state.userSignup.error.response.data.info : "Successfully Login.",
+    response:state.userSignup.status === "success" ? state.userSignup.response.info  : state.userSignup.response
   }
 }
 
 export default connect(mapStateToProps, {
   UserRegisterAction,
-  UserLoginAction
+  UserLoginAction,
+  SetGlobalNotification
 })(SignUp)
