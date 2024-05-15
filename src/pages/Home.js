@@ -98,21 +98,22 @@ const Home = (props) => {
             </div>
           }
         />
-        <RoomItemCard />
         {
           Array.isArray(state.serviceList) && state.serviceList.length > 0 && (
-            <div className="col-md-12">
-              <ul className="cards">
+            <div className="col-md-12 p-4" style={{
+              display:"flex",
+              flexDirection:'column',
+              gap:"10px"
+            }}>
                 {
                   (state.serviceList || props.dataList).map((item, index) => (
-                    <RoomCard
+                    <RoomItemCard
                       key={index}
                       metaData={item}
                       handleItemView={handleItemView}
                     />
                   ))
                 }
-              </ul>
             </div>
           )
         }
