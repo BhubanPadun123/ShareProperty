@@ -46,7 +46,16 @@ class StepperMove extends React.Component {
             fields_data = this.props.candidateDetails
         }
         if(this.state.activeStep === 1){
-            fields_data = this.props.serviceDetails
+            fields_data = this.props.serviceDetails.serviceDays
+        }
+        if(this.state.activeStep === 2){
+            fields_data = this.props.v_details
+        }
+        if(this.state.activeStep === 3){
+            fields_data = this.props.v_capacity
+        }
+        if(this.state.activeStep === 4){
+            fields_data = this.props.serviceMethod
         }
         return (
             <Grid component={Paper} sx={12} md={6} display={'flex'} flexDirection={'column'} gap={"8px"} justifyContent={'center'} bgcolor={"#c9c253"} alignItems={"center"}>
@@ -80,8 +89,8 @@ class StepperMove extends React.Component {
                                 <StepContent>
                                     {
                                         <step.description 
-                                           updateValue={(e,type)=> {
-                                            this.props.handleNext(e,type)
+                                           updateValue={(e,type,name)=> {
+                                            this.props.handleNext(e,type,name)
                                             this.setState({next: false})
                                            }}
                                            next={this.state.next}
@@ -115,7 +124,7 @@ class StepperMove extends React.Component {
                     this.state.activeStep === this.state.steps.length && (
                         <Paper square elevation={0} sx={{ p: 3, width: 'max-content' ,borderRadius:"12px"}}>
                             <Typography>All steps completed - you&apos;re finished</Typography>
-                            <Button sx={{ mt: 1, mr: 1 }} variant='contained'>
+                            <Button sx={{ mt: 1, mr: 1 }} variant='contained' onClick={this.props.handleSubmit}>
                                 Submit
                             </Button>
                         </Paper>

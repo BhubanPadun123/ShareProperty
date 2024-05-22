@@ -69,7 +69,7 @@ class HomeHeader extends React.Component {
     }
 }
 
-class RoomCard extends React.Component {
+class CardMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -105,10 +105,13 @@ class RoomCard extends React.Component {
     }
 
     render() {
+        console.log(this.props.metaData,"<<<<<<")
         let images = this.props.metaData.images
-        console.log(this.props)
         return (
-            <li>
+            <li style={{
+                display:"flex",
+                justifyContent:'center'
+            }}>
                 <div href="" className="card">
                     <img src={Array.isArray(images) && images.length > 0 ? images[0].src : this.state.roomImgSrc} className="card__image" alt="" />
                     <div className="card__overlay">
@@ -141,7 +144,7 @@ class RoomCard extends React.Component {
         )
     }
 }
-RoomCard.propTypes = {
+CardMenu.propTypes = {
     key: PropTypes.number,
     metaData: PropTypes.object,
     handleItemView: PropTypes.func
@@ -154,5 +157,5 @@ HomeHeader.propTypes = {
 
 export {
     HomeHeader,
-    RoomCard
+    CardMenu
 }

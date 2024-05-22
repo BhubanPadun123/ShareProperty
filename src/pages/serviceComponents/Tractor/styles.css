@@ -1,0 +1,16 @@
+.img{
+    width: 200px;
+    height: 240px;
+    border: 1px solid ;
+    border-radius: 10px;
+}
+.container-dev{
+    display:flex;
+}
+.card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    flex-direction: column;
+}

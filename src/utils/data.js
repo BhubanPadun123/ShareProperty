@@ -23,7 +23,22 @@ export const images = {
     room_payment: roomPayment
 }
 
-export const serviceList = ["Room Rent","Hospital Service","Tractor Rent","Gurdant Worker","School Service","Construction Worker","News"]
+export const serviceList = [
+    "Room Rent",
+    "Hospital Service",
+    "Tractor Rent",
+    "Gurdant Worker",
+    //"School Service",
+    //"Construction Worker",
+    //"News"
+]
+export const tractorServiceList = {
+    solid: "Soil",
+    sand :"Sand",
+    t_braval:"T-Gravel",
+    s_gravel:"Sand-Gravel",
+    wood_carry:"Wood-Carry"
+}
 
 export const serviceListData = [
     {
@@ -60,42 +75,42 @@ export const serviceListData = [
             "Wood-Carry",
         ]
     },
-    {
-        label:"School Service",
-        label_icon: school_1,
-        service_menu:[
-            "School",
-            "Shopping",
-            "Party",
-            "Hospital",
-            "Tour"
-        ]
-    },
+    // {
+    //     label:"School Service",
+    //     label_icon: school_1,
+    //     service_menu:[
+    //         "School",
+    //         "Shopping",
+    //         "Party",
+    //         "Hospital",
+    //         "Tour"
+    //     ]
+    // },
     {
         label:"Gurdant Worker",
         label_icon: worker_1,
         service_menu: [ ]
     },
-    {
-        label:"Construction Worker",
-        label_icon: construction_1,
-        service_menu:[
-            "Soil",
-            "Sand",
-            "T-Gravel",
-            "Sand-Gravel",
-            "Wood-Carry",
-        ]
-    },
-    {
-        label:"News",
-        label_icon: news,
-        service_menu:[
-            "Education",
-            "Business",
-            "Job",
-            "Tranding",
-            "Other"
-        ]
-    }
+    // {
+    //     label:"Construction Worker",
+    //     label_icon: construction_1,
+    //     service_menu:[
+    //         "Soil",
+    //         "Sand",
+    //         "T-Gravel",
+    //         "Sand-Gravel",
+    //         "Wood-Carry",
+    //     ]
+    // },
+    // {
+    //     label:"News",
+    //     label_icon: news,
+    //     service_menu:[
+    //         "Education",
+    //         "Business",
+    //         "Job",
+    //         "Tranding",
+    //         "Other"
+    //     ]
+    // }
 ]

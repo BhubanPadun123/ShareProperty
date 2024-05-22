@@ -24,6 +24,15 @@ import {
     Checkbox,
     ListItemText
 } from "@mui/material";
+import {
+    Card
+} from "react-bootstrap"
+import PhotoUploader  from "../../../Helper/PhotoUploader.js"
+import {connect} from "react-redux"
+import {RoomActionControl} from "../../../Redux/actions/RoomAction"
+import {DNALoader} from "../../../Helper/Loader"
+
+const PostMetaData = new RoomActionControl().handleMetadataPost
 
 class About extends React.Component {
     constructor(props) {
@@ -143,7 +152,7 @@ class ServiceTime extends React.Component {
                 serviceDays: this.state.selectedDays,
                 time: this.state.time
             }
-            this.props.updateValue(serviceTime,"serviceDetails")
+            this.props.updateValue(serviceTime,"serviceDetails","time")
         }
         return (
             <Container component={Paper}
@@ -257,9 +266,9 @@ class AboutVechicle extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedVechile:"",
-            v_name:"",
-            v_number:""
+            selectedVechile: this.props.fields_data.v_type ? this.props.fields_data.v_type : "",
+            v_name: this.props.fields_data.v_name ? this.props.fields_data.v_name :  "",
+            v_number: this.props.fields_data.v_number ? this.props.fields_data.v_number : ""
         }
     }
     handleChange = (event) => {
@@ -273,8 +282,7 @@ class AboutVechicle extends React.Component {
                 v_name: this.state.v_name,
                 v_number : this.state.v_number
             }
-
-            this.props.updateValue(v_details,"propertyDetails")
+            this.props.updateValue(v_details,"propertyDetails","about")
         }
         return (
             <Container component={Paper}
@@ -342,6 +350,8 @@ class VechileCapacity extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            max: this.props.fields_data.max ? this.props.fields_data.max : "",
+            min: this.props.fields_data.min ? this.props.fields_data.min : ""
         }
     }
     handleChange = (event) => {
@@ -349,6 +359,13 @@ class VechileCapacity extends React.Component {
     }
 
     render() {
+        if(this.props.next){
+            let capacity = {
+                max: this.state.max,
+                min: this.state.min
+            }
+            this.props.updateValue(capacity,"propertyDetails","capacity")
+        }
         return (
             <Container component={Paper}
                 sx={{
@@ -366,6 +383,10 @@ class VechileCapacity extends React.Component {
                        variant={'outlined'}
                        focused
                        placeholder="Minimum Capacity"
+                       value={this.state.max}
+                       onChange={(e)=> {
+                        this.setState({max: e.target.value})
+                       }}
                     />
                 </Grid>
                 <Grid item sx={12} md={6}>
@@ -373,23 +394,40 @@ class VechileCapacity extends React.Component {
                        variant={'outlined'}
                        focused
                        placeholder="Maximum Capacity"
+                       value={this.state.min}
+                       onChange={(e)=> {
+                        this.setState({min: e.target.value})
+                       }}
                     />
                 </Grid>
             </Container>
         )
     }
 }
+VechileCapacity.propTypes = {
+    updateValue: PropTypes.func,
+    next: PropTypes.bool,
+    fields_data: PropTypes.object
+}
 
 class ChargesType extends React.Component{
     constructor(props){
         super(props);
         this.state= {
-            chargesTypes:"",
-            chargeMethod:""
+            chargesTypes:this.props.fields_data.s_type ? this.props.fields_data.s_type : "",
+            chargeMethod: this.props.fields_data.s_method ? this.props.fields_data.s_method : ""
         }
     }
 
     render(){
+        if(this.props.next){
+            let search = {
+                s_type: this.state.chargesTypes,
+                s_method:this.state.chargeMethod
+            }
+
+            this.props.updateValue(search,"serviceDetails","method")
+        }
         return(
             <Container component={Paper} style={{
                 display:"flex",
@@ -439,6 +477,52 @@ class ChargesType extends React.Component{
     }
 }
 
+class AmountRent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            amount:""
+        }
+    }
+
+    render() {
+        if(this.props.next){
+            let amount = {
+                rentAmount : this.state.amount
+            }
+            this.props.updateValue(amount,"serviceDetails","amount")
+        }
+        return (
+            <Container component={Paper}
+                sx={{
+                    width: "100%",
+                    padding: "0px",
+                    display: "flex",
+                    flexDirection: 'column',
+                    gap: "10px",
+                    paddingTop:4,
+                    paddingBottom:4
+                }}
+            >
+                <Grid item sx={12} md={6}>
+                    <TextField
+                        placeholder="Ammount"
+                        value={this.state.amount}
+                        onChange={(e)=> {
+                            this.setState({amount: e.target.value})
+                        }}
+                    />
+                </Grid>
+            </Container>
+        )
+    }
+}
+AmountRent.propTypes = {
+    updateValue: PropTypes.func,
+    next: PropTypes.bool,
+    fields_data: PropTypes.object
+}
+
 
 const steps = [
     {
@@ -475,7 +559,7 @@ const steps = [
         label: "Charge Amount",
         label_icon: Payment,
         value: "name",
-        description: About
+        description: AmountRent
     },
     // {
     //     label: "Agreement",
@@ -496,17 +580,24 @@ class HospitalService extends React.Component {
                     candidateName: this.props.metaData.candidateName ? this.props.metaData.candidateName : ""
                 },
                 serviceDetails:{
-                    serviceList:this.props.metaData.serviceList ? this.props.metaData.serviceList : []
+                    serviceList:this.props.metaData.serviceList ? this.props.metaData.serviceList : [],
+                    serviceDays:[],
+                    serviceTime:{},
+                    amount:"",
+                    serviceMethod:{}
                 },
-                propertyDetails:""
+                propertyDetails:{
+                    v_details:{},
+                    capacity:""
+                }
             },
             email:this.props.metaData.email ? this.props.metaData.email : "",
+            showLoader:"false",
             images:[]
         }
     }
     
-    handleNext=(value,type)=> {
-        console.log(value,type,"<===========")
+    handleNext=(value,type,name)=> {
         switch(type){
             case "candidateDetails":
                 this.setState((prevState)=> ({
@@ -527,22 +618,77 @@ class HospitalService extends React.Component {
                 }))
                 break;
             case "serviceDetails":
-                this.setState((prevState)=> ({
-                    ...prevState,
-                    metaData:{
-                        ...prevState.metaData,
-                        serviceDetails: value
-                    }
-                }))                
+                if(name === "time"){
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        metaData:{
+                            ...prevState.metaData,
+                            serviceDetails:{
+                                ...prevState.metaData.serviceDetails,
+                                serviceDays: value
+                            }
+                        }
+                    }))
+                }else if(name === "sType"){
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        metaData:{
+                            ...prevState.metaData,
+                            serviceDetails:{
+                                ...prevState.metaData.serviceDetails,
+                                serviceTime: value
+                            }
+                        }
+                    }))
+                }else if(name === "amount"){
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        metaData:{
+                            ...prevState.metaData,
+                            serviceDetails:{
+                                ...prevState.metaData.serviceDetails,
+                                amount: value
+                            }
+                        }
+                    }))
+                }else if(name === "method"){
+                    this.setState((prevState) =>({
+                        ...prevState,
+                        metaData:{
+                            ...prevState.metaData,
+                            serviceDetails:{
+                                ...prevState.metaData.serviceDetails,
+                                serviceMethod:value
+                            }
+                        }
+                    }))
+                }              
                 break;
             case "propertyDetails":
-                this.setState((prevState)=> ({
-                    ...prevState,
-                    metaData:{
-                        ...prevState.metaData,
-                        propertyDetails: value
-                    }
-                }))                
+                if(name === "about"){
+                    
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        metaData:{
+                            ...prevState.metaData,
+                            propertyDetails:{
+                                ...prevState.metaData.propertyDetails,
+                                v_details: value
+                            }
+                        }
+                    }))
+                }else if(name === "capacity"){
+                    this.setState((prevState)=> ({
+                        ...prevState,
+                        metaData:{
+                            ...prevState.metaData,
+                            propertyDetails:{
+                                ...prevState.metaData.propertyDetails,
+                                capacity: value
+                            }
+                        }
+                    }))
+                }                               
                 break;
             case "images":                
                 this.setState({images:value});
@@ -552,19 +698,78 @@ class HospitalService extends React.Component {
         }
     }
 
+    handleSubmit=async()=> {
+        let data = {
+            email: this.state.metaData.ownerDetails.email,
+            metaData: this.state.metaData,
+            images: this.state.images
+        }
+        await this.props.PostMetaData(data)
+    }
+    
+
     render() {
-        
+        console.log("props list===>",this.props)
         return (
             <Container component={Paper} sx={{
                 background:'#54544d',
                 padding:4,
                 borderRadius:"8px"
             }}>
+                <Card style={{ borderRadius:"4px"}}>
+                    <Card.Title>Select Photos for poster</Card.Title>
+                    <Card.Body>
+                        <PhotoUploader 
+                           title={"Select Photos"}
+                           photoAccept={"jpg/png"}
+                           onSelect={(e)=> {
+                            let image = []
+                            if(Array.isArray(e) && e.length > 0){
+                                e.map((item)=> {
+                                    let src = URL.createObjectURL(item)
+                                    image.push({src:src})
+                                })
+                            }
+                            this.setState({images: this.state.images.concat(image)})            
+                           }}
+                           allowClick={true}
+                           allowDrag={false}
+                           multiple={true}
+                        />
+                    </Card.Body>
+                    {
+                        this.state.images.length > 0 && (
+                            <Card.Footer style={{
+                                display:'flex',
+                                flexDirection:'row',
+                                gap:"4px",
+                                justifyContent:'center',
+                                alignItems:'center',
+                                overflowX:'scroll',
+                                overflowY:"hidden"
+                            }}>
+                                {
+                                    this.state.images.map((item,index)=> (
+                                        <Card.Img style={{
+                                            height:"100px",
+                                            width:"80px",
+                                            border:"1px solid green"
+                                        }} src={item.src} alt="images" key={index} />
+                                    ))
+                                }
+                            </Card.Footer>
+                        )
+                    }
+                </Card>
                 <StepperMove
                     stepsList={steps}
                     handleNext={this.handleNext}
                     candidateDetails={this.state.metaData.ownerDetails}
                     serviceDetails={this.state.metaData.serviceDetails}
+                    v_details = {this.state.metaData.propertyDetails.v_details}
+                    v_capacity = {this.state.metaData.propertyDetails.capacity}
+                    serviceMethod = {this.state.metaData.serviceDetails.serviceMethod}
+                    handleSubmit = {this.handleSubmit}
                 />
             </Container>
         )
@@ -575,4 +780,15 @@ HospitalService.propTypes = {
 
 }
 
-export default HospitalService
+const mapStateToProps=state=> {
+
+    console.log("state list===>",state)
+
+    return {
+        state
+    }
+}
+
+export default connect(mapStateToProps,{
+    PostMetaData
+})(HospitalService)

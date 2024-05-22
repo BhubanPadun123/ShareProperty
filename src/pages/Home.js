@@ -2,7 +2,7 @@ import React from "react";
 import { DNALoader } from "../Helper/Loader"
 import {
   HomeHeader,
-  RoomCard
+  CardMenu
 } from "../Helper/HomeHeader"
 import {
   Box,
@@ -16,8 +16,13 @@ import { SetGlobalNotification } from "../Redux/actions/NotificationAction.js";
 import PopOver from "../Helper/PopOver.js";
 import { serviceList } from "../utils/data.js";
 import "../Helper/styles/HomeStyles.css"
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import RoomItemCard from "./serviceComponents/Car/RoomItem.js";
+import TractorCard from "./serviceComponents/Tractor/TractorCard.js";
+import LCard from "./serviceComponents/Labour/LCard.js";
+import HCard from "./serviceComponents/HospitalService/HCard.js";
+
+import Card_1 from "../Helper/CardList/listItemCard/Card_1.js";
 
 
 const HandleGetAllService = new GlobalAction().HandleGetAllService
@@ -48,16 +53,17 @@ const Home = (props) => {
   const handleClickFilter = (data) => {
     setState({ ...state, anchorElPopover: data.currentTarget })
   }
+  console.log(props, "<....")
 
   const handleFilter = (data) => {
     console.log(data, state.serviceList)
   }
-  const handleItemView=(data)=> {
-    setState({...state,showLoading: true})
-    setTimeout(()=>{
-      setState({...state,showLoading:false})
-      navigate('/view-room',{state:{data}})
-    },2000)
+  const handleItemView = (data) => {
+    setState({ ...state, showLoading: true })
+    setTimeout(() => {
+      setState({ ...state, showLoading: false })
+      navigate('/view-room', { state: { data } })
+    }, 2000)
   }
 
   return (
@@ -100,25 +106,24 @@ const Home = (props) => {
         />
         {
           Array.isArray(state.serviceList) && state.serviceList.length > 0 && (
-            <div className="col-md-12 p-4" style={{
-              display:"flex",
-              flexDirection:'column',
-              gap:"10px"
-            }}>
+            <div className="container">
+              <ul>
                 {
                   (state.serviceList || props.dataList).map((item, index) => (
-                    <RoomItemCard
+                    <CardMenu
                       key={index}
                       metaData={item}
-                      handleItemView={handleItemView}
+                      handleItemView={handleItemView}                      
                     />
-                  ))
+                  )
+                  )
                 }
+              </ul>
             </div>
           )
         }
         {
-          (props.status === "started" || state.showLoading ) && (
+          (props.status === "started" || state.showLoading) && (
             <div className="col-md-12" style={{
               position: "absolute",
               top: 0,
@@ -129,12 +134,12 @@ const Home = (props) => {
               alignItems: "center",
               backgroundColor: "GrayText",
               opacity: 0.8,
-              zIndex:20
+              zIndex: 20
             }}>
               <DNALoader />
             </div>
           )
-        }        
+        }
       </Paper>
     </Box>
   );

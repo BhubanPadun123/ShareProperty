@@ -95,11 +95,10 @@ function Room(props) {
 
         await props.HandlePostMetaData({email:state.candidateDetails.email,metaData:state.metaData})
     }
-    console.log("Props==>",props)
     return (
         <div className="col-md-12 w-100 h-100">
             <Container>
-                <Card className="" style={{ borderRadius: "12px", padding: "12px" }}>
+                <Card className="" style={{ borderRadius: "12px", padding: "12px",display:'flex',justifyContent:'center',alignItems:'center' }}>
                     <Card.Img alt="images" src={state.candidateDetails.profileImg ? state.candidateDetails.profileImg : images.address_location} style={{ height: "220px", width: "220px" }} />
                     <Card.Title className="text-info p-4">
                         Owner Mandatory Fields

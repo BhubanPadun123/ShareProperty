@@ -13,6 +13,7 @@ import { RoomActionControl } from "../../../Redux/actions/RoomAction.js"
 import {
     Card
 } from "react-bootstrap"
+import { tractorServiceList } from "../../../utils/data.js";
 import PhotoUploader from "../../../Helper/PhotoUploader.js";
 import { SetGlobalNotification } from "../../../Redux/actions/NotificationAction.js";
 import GlobalAction from "../../../Redux/actions/GlobalAction.js";
@@ -51,10 +52,10 @@ function Tractor(props) {
         } else {
             return
         }
-        state.metaData.images = state.images
         let data = {
             email: state.contactDetail.email,
-            metaData: state.metaData
+            metaData: state.metaData,
+            images: state.images
         }
         props.handePostMetaData(data)
     }
@@ -256,32 +257,19 @@ function Tractor(props) {
                                     placeholder={item}
                                     variant='outlined'
                                     label={item}
+                                    type='number'
                                     onChange={(e) => {
                                         let inputValue = e.target.value
-                                        if (state.currentAmountInput != item) {
-                                            setState((prevState) => {
-                                                return {
-                                                    metaData: prevState.metaData,
-                                                    addressDetails: prevState.addressDetails,
-                                                    amountChargeDetail: [...prevState.amountChargeDetail, { chargeAmount: [item, inputValue] }],
-                                                    contactDetail: prevState.contactDetail,
-                                                    currentAmountInput: item
-                                                }
-                                            })
-                                        } else {
-                                            let updateExistingData = state.amountChargeDetail.map((i) => {
-                                                console.log(i)
-                                            })
-                                            //console.log("===>",updateExistingData)
-                                            // setState((prevState)=> {
-                                            //     return {
-                                            //         metaData: prevState.metaData,
-                                            //         addressDetails:prevState.addressDetails,
-                                            //         amountChargeDetail:[...prevState.amountChargeDetail,prevState.amountChargeDetail.],
-                                            //         contactDetail: prevState.contactDetail,
-                                            //         currentAmountInput: item
-                                            //     }
-                                            // })
+                                        if(item===tractorServiceList.s_gravel){
+                                            setState({...state,amountChargeDetail:{...state.amountChargeDetail,s_gravel:inputValue}})
+                                        }else if(item === tractorServiceList.sand){
+                                            setState({...state,amountChargeDetail:{...state.amountChargeDetail,sand: inputValue}})
+                                        }else if(item === tractorServiceList.solid){
+                                            setState({...state,amountChargeDetail:{...state.amountChargeDetail,solid: inputValue}})
+                                        }else if(item === tractorServiceList.t_braval){
+                                            setState({...state,amountChargeDetail:{...state.amountChargeDetail,t_gravel: inputValue}})
+                                        }else if(item === tractorServiceList.wood_carry){
+                                            setState({...state,amountChargeDetail:{...state.amountChargeDetail,wood_carry:inputValue}})
                                         }
                                     }}
                                 />

@@ -38,19 +38,13 @@ class Labour extends React.Component {
     }
 
     handleSubmit = () => {
-        if (this.checkEmployeeData(this.state.empliyeeData)){
-            this.state.metaData.profilePhoto = this.state.profilePhoto ? URL.createObjectURL(this.state.profilePhoto) : null
-            const data = {
-                email: this.state.metaData.email,
-                metaData: this.state.metaData
-            }
-            this.props.handleMetadataPost(data)
-        }else{
-            this.props.SetGlobalNotification({
-                status: "warning",
-                message:"All fill's are Mandatory!!, Please fill carefully."
-            })
+        let reader = this.state.profilePhoto && URL.createObjectURL(this.state.profilePhoto)
+        const data = {
+            email: this.state.metaData.email,
+            metaData: this.state.metaData,
+            images : reader
         }
+        this.props.handleMetadataPost(data)
     }
 
     checkEmployeeData = (data) => {
@@ -65,6 +59,7 @@ class Labour extends React.Component {
     }
 
     render() {
+        console.log(this.props)
         return (
             <div style={{
                 width: "100%",
