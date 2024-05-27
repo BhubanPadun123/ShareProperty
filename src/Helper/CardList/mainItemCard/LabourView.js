@@ -12,7 +12,12 @@ function LabourView(props){
 }
 
 LabourView.propTypes = {
-
+    email: PropTypes.string.isRequired,
+    images:PropTypes.object,
+    address:PropTypes.object,
+    ownerDetails:PropTypes.object,
+    serviceDetails:PropTypes.object,
+    
 }
 
 export default LabourView

@@ -14,34 +14,56 @@ import HospitalServiceView from "./HospitalServiceView"
 function MainItemViewCard(props) {
     const location = useLocation()
     const {type} = useParams()
-    console.log("R type------>",location.state.data)
+    const {
+        email,
+        images,
+        metaData
+    } = location.state.data
+
     if(type === "Room Rent"){
-        const {
-            email,
-            images,
-            metaData
-        } = location.state.data
         return (
             <RoomView 
-               
+               email = {email}
+               images = {images}
+               address={metaData.address}
+               ownerDetails={metaData.ownerDetails}
+               propertyDetails={metaData.propertyDetails}
+               serviceDetails={metaData.serviceDetails}
             />
         )
     }
     if(type === "Gurdant Worker"){
         return(
             <LabourView 
+               email={email}
+               images={images}
+               address={metaData.address}
+               ownerDetails={metaData.ownerDetails}
+               serviceDetails={metaData.serviceDetails}
             />
         )
     }
     if(type === "Tractor Rent"){
         return (
             <TractorServiceView 
+               email={email}
+               images={images}
+               address={metaData.address}
+               ownerDetails={metaData.ownerDetails}
+               propertyDetails={metaData.propertyDetails}
+               serviceDetails={metaData.serviceDetails}
             />
         )
     }
     if(type==="Hospital Service"){
         return(
             <HospitalServiceView 
+               email={email}
+               images={images}
+               address={metaData.address}
+               ownerDetails={metaData.ownerDetails}
+               propertyDetails={metaData.propertyDetails}
+               serviceDetails={metaData.serviceDetails}
             />
         )
     }

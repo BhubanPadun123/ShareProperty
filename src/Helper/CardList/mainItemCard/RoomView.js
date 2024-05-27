@@ -252,6 +252,15 @@ const mapStateToProps = (state) => {
     }
 }
 
+RoomView.propTypes = {
+    email: PropTypes.string.isRequired,
+    images: PropTypes.object,
+    address: PropTypes.object,
+    ownerDetails: PropTypes.object,
+    propertyDetails: PropTypes.object,
+    serviceDetails: PropTypes.object,
+}
+
 export default connect(mapStateToProps, {
 
 })(RoomView)
