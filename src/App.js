@@ -1,8 +1,5 @@
 import React from "react";
-import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./Navbar/Navbar";
-import NavbarHook from "./NavbarHook/NavbarHook";
 import Home from "./pages/Home";
 import News from "./pages/News";
 import SignupForm from "./pages/Signup";
@@ -14,25 +11,34 @@ import ErrorPage from "./pages/ErrorPage";
 import GlobalNotification from "./Helper/GlobalNotification";
 import UpdateProperty from "./Helper/UpdateProperty";
 import MainItemViewCard from "./Helper/CardList/mainItemCard/index"
+import Header from "./Header/Header";
+import Footer from "./Footer";
 
 const App = () => {
   return (
     <Router>
-      <NavbarHook />
-      <GlobalNotification />
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<SignupForm />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/room-service" element={<PostPropert />} />
-          <Route path="/post" element={<JunctionPoint />} />
-          <Route path="/update" element={<UpdateProperty />} />
-          <Route path="/view-room" element={<MainItemViewCard />} />
-          <Route path="*" element={<ErrorPage/>} />
-        </Routes>
+      <main>
+        <Header />
+        <GlobalNotification />
+        <div style={{
+          height:"100vh",
+          overflowY:'scroll',
+          overflowX:'hidden'
+        }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignupForm />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/room-service" element={<PostPropert />} />
+            <Route path="/post" element={<JunctionPoint />} />
+            <Route path="/update" element={<UpdateProperty />} />
+            <Route path="/view-room/:type" element={<MainItemViewCard />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+          <Footer />
+        </div>
       </main>
     </Router>
   );

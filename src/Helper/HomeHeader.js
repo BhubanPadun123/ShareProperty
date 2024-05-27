@@ -2,26 +2,22 @@ import React from "react";
 import {
     Search,
     FilterAlt,
-    KeyboardDoubleArrowLeft,
-    KeyboardDoubleArrowRight
 } from "@mui/icons-material"
 import {
     InputAdornment,
     TextField,
     IconButton,
     Tooltip,
-    Grid,
-    Container,
-    Paper,
-    Box,
-    Typography,
-    Divider
+    Grid
 } from "@mui/material"
 import pic_1 from "../image/school_1.jpg"
 import PropTypes from "prop-types"
 import { serviceListData } from "../utils/data";
-import "./styles/HomeStyles.css"
 import { Button } from "react-bootstrap";
+import RoomServiceCard from "./CardList/ServicesCard/RoomServiceCard";
+import HospitalService from "./CardList/ServicesCard/HospitalService";
+import TractorService from "./CardList/ServicesCard/TractorService";
+import LabourService from "./CardList/ServicesCard/LabourService";
 
 
 class HomeHeader extends React.Component {
@@ -74,12 +70,12 @@ class CardMenu extends React.Component {
         super(props);
         this.state = {
             roomImgSrc: pic_1,
-            imgIndex: 0
+            imgIndex: 0,
+            metaData:this.props.metaData
         }
     }
 
     handleImgForwardBackward = (type) => {
-        console.log(this.state.imgIndex, type, serviceListData.length)
         if (type === "forward") {
             let index = this.state.imgIndex
             if (serviceListData.length - 1 > index) {
@@ -105,43 +101,60 @@ class CardMenu extends React.Component {
     }
 
     render() {
-        console.log(this.props.metaData,"<<<<<<")
-        let images = this.props.metaData.images
-        return (
-            <li style={{
-                display:"flex",
-                justifyContent:'center'
-            }}>
-                <div href="" className="card">
-                    <img src={Array.isArray(images) && images.length > 0 ? images[0].src : this.state.roomImgSrc} className="card__image" alt="" />
-                    <div className="card__overlay">
-                        <div className="card__header">
-                            <svg className="card__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>
-                            <img className="card__thumb" src="https://i.imgur.com/7D7I6dI.png" alt="" />
-                            <div className="card__header-text">
-                                <h3 className="card__title">Jessica Parker</h3>
-                                <span className="card__status">1 hour ago</span>
-                            </div>
-                            <div className="card__header-button">
-                                <IconButton onClick={() => this.handleImgForwardBackward("backward")}>
-                                    <KeyboardDoubleArrowLeft />
-                                </IconButton>
-                                <IconButton onClick={() => this.handleImgForwardBackward("forward")}>
-                                    <KeyboardDoubleArrowRight />
-                                </IconButton>
-                            </div>
-                        </div>
-                        <div className="card__description">
-                            <span>1BHK Independent House </span>,
-                            <span>Jonai,Murkongselec,Dhemaji</span>
-                            <Button className="mt-2" variant='info' onClick={()=> {
-                                this.props.handleItemView(this.props.metaData)
-                            }}>View</Button>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        )
+        let images = this.props.metaData.images        
+        if(this.state.metaData.metaData.serviceType === "Room Rent"){
+            return(
+                <RoomServiceCard 
+                  src={Array.isArray(images) && images.length > 0 ? images[0].src : this.state.roomImgSrc}
+                  handleImgForwardBackward={this.handleImgForwardBackward}
+                  handleItemView={this.props.handleItemView}
+                  metaData={this.state.metaData}
+                  address={this.state.metaData.metaData.address}
+                  ownerDetails={this.state.metaData.metaData.ownerDetails}
+                  propertyDetails={this.state.metaData.metaData.propertyDetails}
+                  serviceDetails = {this.state.metaData.metaData.serviceDetails}
+                />
+            )
+        }
+        if(this.state.metaData.metaData.serviceType === "Hospital Service"){
+            return(
+                <HospitalService 
+                   src={Array.isArray(images) && images.length > 0 ? images[0].src : this.state.roomImgSrc}
+                   metaData={this.state.metaData}
+                   address={this.state.metaData.metaData.address}
+                   ownerDetails={this.state.metaData.metaData.ownerDetails}
+                   propertyDetails={this.state.metaData.metaData.propertyDetails}
+                   serviceDetails={this.state.metaData.metaData.serviceDetails}
+                   handleItemView={this.props.handleItemView}
+                />
+            )
+        }
+        if(this.state.metaData.metaData.serviceType === "Tractor Rent"){
+            return(
+                <TractorService 
+                   images={images}
+                   metaData={this.state.metaData}
+                   address={this.state.metaData.metaData.address}
+                   ownerDetails={this.state.metaData.metaData.ownerDetails}
+                   serviceDetails={this.state.metaData.metaData.serviceDetails}
+                   handleItemView={this.props.handleItemView}
+                />
+            )
+        }
+        if(this.state.metaData.metaData.serviceType === "Gurdant Worker"){
+            return(
+                <LabourService 
+                  images={images}
+                  metaData={this.state.metaData}
+                  address={this.state.metaData.metaData.address}
+                  candidateDtails={this.state.metaData.metaData.ownerDetails}
+                  handleItemView={this.props.handleItemView}
+                />
+            )
+        }
+        else{
+            return null
+        }
     }
 }
 CardMenu.propTypes = {

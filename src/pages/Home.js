@@ -17,15 +17,23 @@ import PopOver from "../Helper/PopOver.js";
 import { serviceList } from "../utils/data.js";
 import "../Helper/styles/HomeStyles.css"
 import { useNavigate } from "react-router-dom"
-import RoomItemCard from "./serviceComponents/Car/RoomItem.js";
-import TractorCard from "./serviceComponents/Tractor/TractorCard.js";
-import LCard from "./serviceComponents/Labour/LCard.js";
-import HCard from "./serviceComponents/HospitalService/HCard.js";
-
-import Card_1 from "../Helper/CardList/listItemCard/Card_1.js";
+import styled from "styled-components";
 
 
 const HandleGetAllService = new GlobalAction().HandleGetAllService
+
+const NavManu = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+  width:70%;
+  @media screen and (max-width: 768px) {
+    display: grid;
+    grid-template-columns: auto;
+    gap:10px;
+    width:100%
+  }
+`;
 
 const Home = (props) => {
 
@@ -53,7 +61,6 @@ const Home = (props) => {
   const handleClickFilter = (data) => {
     setState({ ...state, anchorElPopover: data.currentTarget })
   }
-  console.log(props, "<....")
 
   const handleFilter = (data) => {
     console.log(data, state.serviceList)
@@ -62,7 +69,7 @@ const Home = (props) => {
     setState({ ...state, showLoading: true })
     setTimeout(() => {
       setState({ ...state, showLoading: false })
-      navigate('/view-room', { state: { data } })
+      navigate(`/view-room/${data.metaData.serviceType}`, { state: { data } })
     }, 2000)
   }
 
@@ -70,12 +77,14 @@ const Home = (props) => {
     <Box sx={{
       width: `${window ? `${window.innerWidth}px ` : "100%"}`,
       textAlign: 'center',
-      paddingTop: 2
-    }} component={Paper}>
-      <HomeHeader
-        handleClickFilter={handleClickFilter}
-      />
-      <Paper>
+      paddingTop: 2,
+      paddingBottom:"10px"
+    }}>
+      <Paper style={{
+        display:"flex",
+        justifyContent:'center',
+        paddingBottom:"10px"
+      }}>
         <PopOver
           anchorEl={state.anchorElPopover}
           handleClose={() => { setState({ ...state, anchorElPopover: null }) }}
@@ -106,20 +115,19 @@ const Home = (props) => {
         />
         {
           Array.isArray(state.serviceList) && state.serviceList.length > 0 && (
-            <div className="container">
-              <ul>
+            <NavManu>
                 {
                   (state.serviceList || props.dataList).map((item, index) => (
                     <CardMenu
                       key={index}
                       metaData={item}
-                      handleItemView={handleItemView}                      
+                      handleItemView={handleItemView}
                     />
                   )
                   )
                 }
-              </ul>
-            </div>
+              
+            </NavManu>
           )
         }
         {
